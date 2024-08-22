@@ -14,15 +14,17 @@ tasks:
   # Update Nextflow if image version is behind
   - name: Update Nextflow and setup pre-commit
     command: |
-      pre-commit install --install-hooks
+      # pre-commit install --install-hooks
       nextflow self-update
-  - name: unset JAVA_TOOL_OPTIONS
-    command: |
       unset JAVA_TOOL_OPTIONS
   # Install additional tools
   - name: Install tools for the exercises.
     command: |
-      echo conda install toolname
+      conda install --yes --update-all \
+        salmon=1.5 \
+        fastqc=0.11 \
+        multiqc=1.10 \
+      && conda clean --all --force-pkgs-dirs --yes
 
 vscode:
   extensions: # based on nf-core.nf-core-extensionpack
