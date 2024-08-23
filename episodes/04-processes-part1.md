@@ -882,7 +882,8 @@ nextflow run process_exercise_input.nf -process.debug
 ```
 :::::::::::::::  solution
 
- ## Solution
+## Solution
+
 ```groovy
  
 
