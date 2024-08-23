@@ -380,11 +380,17 @@ Available fromPath options:
 
 We can change the default options for the `fromPath` method to give an error if the file doesn't exist using the `checkIfExists` parameter. In Nextflow, method parameters are separated by a `,` and parameter values specified with a colon `:`.
 
-If we execute a Nextflow script with the contents below, it will run and not produce an output. This is likely not what we want.
+If we execute a Nextflow script with the contents below, it will run and not produce an output, or an error message that the file does not exist. This is likely not what we want.
 
 ```groovy 
 read_ch = Channel.fromPath( 'data/chicken/reads/*.fq.gz' )
 read_ch.view()
+```
+
+```output
+N E X T F L O W   ~  version 20.10.0
+
+Launching `channels.nf` [scruffy_swartz] DSL2 - revision: 2c8f18ab48
 ```
 
 Add the argument `checkIfExists` with the value `true`.
