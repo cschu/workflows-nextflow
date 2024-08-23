@@ -289,6 +289,21 @@ workflow {
 }
 ```
 
+```bash
+$ nextflow run process_python.nf -process.debug
+```
+
+```output
+ N E X T F L O W   ~  version 24.04.4
+
+Launching `process_python.nf` [mad_montalcini] DSL2 - revision: ee25d49465
+
+executor >  local (1)
+[b4/a100c3] PROCESS_READS [100%] 1 of 1 ✔
+reads 14677
+bases 1482377
+```
+
 This allows the use of a different programming languages which may better fit a particular job. However, for large chunks of code it is suggested to save them into separate files and invoke them from the process script.
 
 ## Associated scripts
