@@ -318,8 +318,8 @@ chmod 755 bin/process_reads.py
 ```
 
 ```python
-# process_reads.py
 #!/usr/bin/env python
+# process_reads.py
 import gzip
 import sys
 reads = 0
