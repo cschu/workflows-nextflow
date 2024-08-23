@@ -6,17 +6,17 @@ exercises: 5
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- "Use pipeline parameters to change the input to a workflow."
-- "Add a pipeline parameters to a Nextflow script."
-- "Understand how to create and use a parameter file."
+- Use pipeline parameters to change the input to a workflow.
+- Add a pipeline parameters to a Nextflow script.
+- Understand how to create and use a parameter file.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- "How can I change the data a workflow uses?"
-- "How can I parameterise a workflow?"
-- "How can I add my parameters to a file?"
+- How can I change the data a workflow uses?
+- How can I parameterise a workflow?
+- How can I add my parameters to a file?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
