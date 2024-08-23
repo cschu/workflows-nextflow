@@ -1091,6 +1091,20 @@ And include the command below in the script directive
  }
 ```
 
+```bash
+$ nextflow run process_exercise_combine.nf -process.debug
+```
+
+```output
+N E X T F L O W   ~  version 24.04.4
+
+Launching `process_exercise_combine.nf` [fabulous_kare] DSL2 - revision: 1eade0a2e9
+
+executor >  local (1)
+[e0/b05fe7] COMBINE (1) [100%] 1 of 1 ✔
+118
+```
+
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
