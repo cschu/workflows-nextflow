@@ -1068,7 +1068,7 @@ And include the command below in the script directive
 ```
 :::::::::::::::  solution
 
- ## Solution
+## Solution
 ```groovy
  // process_exercise_combine_answer.nf
  
