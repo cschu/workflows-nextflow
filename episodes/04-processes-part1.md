@@ -1222,6 +1222,62 @@ $ nextflow run process_exercise_repeat.nf -process.debug
 
 This process runs 16 times.
 
+```output
+N E X T F L O W   ~  version 24.04.4
+
+Launching `process_exercise_repeat.nf` [ecstatic_turing] DSL2 - revision: 17891a7528
+
+executor >  local (16)
+[65/389033] COMBINE (13) [ 62%] 10 of 16
+executor >  local (16)
+[6d/f803e5] COMBINE (9)  [100%] 16 of 16 ✔
+Number of sequences for chromosome J: 398
+
+Number of sequences for chromosome G: 583
+
+Number of sequences for chromosome O: 597
+
+Number of sequences for chromosome N: 435
+
+Number of sequences for chromosome B: 456
+
+Number of sequences for chromosome E: 323
+
+executor >  local (16)
+[6d/f803e5] COMBINE (9)  [100%] 16 of 16 ✔
+Number of sequences for chromosome J: 398
+
+Number of sequences for chromosome G: 583
+
+Number of sequences for chromosome O: 597
+
+Number of sequences for chromosome N: 435
+
+Number of sequences for chromosome B: 456
+
+Number of sequences for chromosome E: 323
+
+Number of sequences for chromosome K: 348
+
+Number of sequences for chromosome H: 321
+
+Number of sequences for chromosome C: 186
+
+Number of sequences for chromosome M: 505
+
+Number of sequences for chromosome L: 580
+
+Number of sequences for chromosome A: 118
+
+Number of sequences for chromosome D: 836
+
+Number of sequences for chromosome F: 140
+
+Number of sequences for chromosome P: 513
+
+Number of sequences for chromosome I: 245
+```
+
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
