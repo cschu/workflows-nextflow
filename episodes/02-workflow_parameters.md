@@ -6,17 +6,17 @@ exercises: 5
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- "Use pipeline parameters to change the input to a workflow."
-- "Add a pipeline parameters to a Nextflow script."
-- "Understand how to create and use a parameter file."
+- Use pipeline parameters to change the input to a workflow.
+- Add a pipeline parameters to a Nextflow script.
+- Understand how to create and use a parameter file.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- "How can I change the data a workflow uses?"
-- "How can I parameterise a workflow?"
-- "How can I add my parameters to a file?"
+- How can I change the data a workflow uses?
+- How can I parameterise a workflow?
+- How can I add my parameters to a file?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -304,7 +304,7 @@ f5ef7b7a01 executor \> local (1) [f3/4fa480] process \> NUM_LINES
 
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
-- "Pipeline parameters are specified by prepending the prefix `params` to a variable name, separated by dot character."
-- "To specify a pipeline parameter on the command line for a Nextflow run use `--variable_name` syntax."
-- "You can add parameters to a JSON formatted file and pass them to the script using option `-params-file`."
+- Pipeline parameters are specified by prepending the prefix `params` to a variable name, separated by dot character.
+- To specify a pipeline parameter on the command line for a Nextflow run use `--variable_name` syntax.
+- You can add parameters to a JSON formatted file and pass them to the script using option `-params-file`.
 ::::::::::::::::::::::::::::::::::::::::::::::::::

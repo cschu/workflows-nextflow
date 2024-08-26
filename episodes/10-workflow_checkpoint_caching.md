@@ -86,6 +86,8 @@ You will see that the execution of the process `NUMLINES` is actually skipped (c
 
 ## How does resume work?
 
+Nextflow stores all intermediate files and task results during the execution of a workflow is `work` directory. It acts as a scratch space where all the temporary data required for the workflow's execution is kept. Within the work directory, Nextflow creates subdirectories named with unique hashes (e.g., work/ab/cd1234...). Each of these subdirectories corresponds to a specific process or task in the pipeline. The hashed directory names ensure that each task's outputs are isolated and uniquely identified.
+
 The mechanism works by assigning a unique ID to each task. This unique ID is used to create a separate execution directory, within the `work` directory, where the tasks are executed and the results stored. A task's unique ID is generated as a 128-bit hash number obtained from a composition of the task's:
 
 - Inputs values

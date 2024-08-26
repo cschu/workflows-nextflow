@@ -289,6 +289,21 @@ workflow {
 }
 ```
 
+```bash
+$ nextflow run process_python.nf -process.debug
+```
+
+```output
+ N E X T F L O W   ~  version 24.04.4
+
+Launching `process_python.nf` [mad_montalcini] DSL2 - revision: ee25d49465
+
+executor >  local (1)
+[b4/a100c3] PROCESS_READS [100%] 1 of 1 ✔
+reads 14677
+bases 1482377
+```
+
 This allows the use of a different programming languages which may better fit a particular job. However, for large chunks of code it is suggested to save them into separate files and invoke them from the process script.
 
 ## Associated scripts
@@ -303,8 +318,8 @@ chmod 755 bin/process_reads.py
 ```
 
 ```python
-# process_reads.py
 #!/usr/bin/env python
+# process_reads.py
 import gzip
 import sys
 reads = 0
@@ -867,7 +882,8 @@ nextflow run process_exercise_input.nf -process.debug
 ```
 :::::::::::::::  solution
 
- ## Solution
+## Solution
+
 ```groovy
  
 
@@ -1052,7 +1068,7 @@ And include the command below in the script directive
 ```
 :::::::::::::::  solution
 
- ## Solution
+## Solution
 ```groovy
  // process_exercise_combine_answer.nf
  
@@ -1073,6 +1089,20 @@ And include the command below in the script directive
  workflow {
    COMBINE(transcriptome_ch, chr_ch)
  }
+```
+
+```bash
+$ nextflow run process_exercise_combine.nf -process.debug
+```
+
+```output
+N E X T F L O W   ~  version 24.04.4
+
+Launching `process_exercise_combine.nf` [fabulous_kare] DSL2 - revision: 1eade0a2e9
+
+executor >  local (1)
+[e0/b05fe7] COMBINE (1) [100%] 1 of 1 ✔
+118
 ```
 
 :::::::::::::::::::::::::
@@ -1191,6 +1221,62 @@ $ nextflow run process_exercise_repeat.nf -process.debug
 ```
 
 This process runs 16 times.
+
+```output
+N E X T F L O W   ~  version 24.04.4
+
+Launching `process_exercise_repeat.nf` [ecstatic_turing] DSL2 - revision: 17891a7528
+
+executor >  local (16)
+[65/389033] COMBINE (13) [ 62%] 10 of 16
+executor >  local (16)
+[6d/f803e5] COMBINE (9)  [100%] 16 of 16 ✔
+Number of sequences for chromosome J: 398
+
+Number of sequences for chromosome G: 583
+
+Number of sequences for chromosome O: 597
+
+Number of sequences for chromosome N: 435
+
+Number of sequences for chromosome B: 456
+
+Number of sequences for chromosome E: 323
+
+executor >  local (16)
+[6d/f803e5] COMBINE (9)  [100%] 16 of 16 ✔
+Number of sequences for chromosome J: 398
+
+Number of sequences for chromosome G: 583
+
+Number of sequences for chromosome O: 597
+
+Number of sequences for chromosome N: 435
+
+Number of sequences for chromosome B: 456
+
+Number of sequences for chromosome E: 323
+
+Number of sequences for chromosome K: 348
+
+Number of sequences for chromosome H: 321
+
+Number of sequences for chromosome C: 186
+
+Number of sequences for chromosome M: 505
+
+Number of sequences for chromosome L: 580
+
+Number of sequences for chromosome A: 118
+
+Number of sequences for chromosome D: 836
+
+Number of sequences for chromosome F: 140
+
+Number of sequences for chromosome P: 513
+
+Number of sequences for chromosome I: 245
+```
 
 :::::::::::::::::::::::::
 
