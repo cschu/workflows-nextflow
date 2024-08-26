@@ -4,11 +4,18 @@ permalink: /setup/
 ---
 
 
+# Setup
+
+There are two options presented here on how setup your computer to complete the exercises
+in this workshop.
+
+1. Running locally on your personal computer
+2. Running the exercises in your browser using a remote environment called Gitpod.
+
+## Running locally on your personal computer
 
 
-# Running the lessons on your local machine
-
-## Training directory
+### Training directory
 
 Each learner should setup a training folder e.g. `nf-training`
 
@@ -27,7 +34,7 @@ There are three items that you need to download:
 
 
 
-## Training software
+### Training software
 
 A list of software with version required for this training is listed below:
 
@@ -40,12 +47,12 @@ A list of software with version required for this training is listed below:
 |multiqc|1.10|
 |python|3.8|
 
-### conda
+#### conda
 
 The simplest way to install the software for this course is using conda.
 
 
-To install conda see [here](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/setup/). 
+To install conda see [here](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/setup/).
 
 An environment file is provided here [environment.yml](https://raw.githubusercontent.com/carpentries-incubator/workflows-nextflow/main/episodes/data/environment.yml)
 
@@ -70,7 +77,7 @@ Then activate the environment by running
 conda activate nf-training
 ```
 
-## Training scripts
+### Training scripts
 
 
 To aid in the delivery of the lesson, the scripts mentioned in each episode, can be found in the respective episode folders in the github repository.
@@ -90,7 +97,7 @@ curl -L -o main.zip https://github.com//carpentries-incubator/workflows-nextflow
 # unzip the script file
 unzip main.zip 'workflows-nextflow-main/episodes/files/scripts*' -d  .
 
-# mv the scripts folder to the nf-training folder 
+# mv the scripts folder to the nf-training folder
 mv workflows-nextflow-main/episodes/files/scripts .
 
 # remove the zip file and the git repo
@@ -100,7 +107,7 @@ rm -r workflows-nextflow-main main.zip
 The nextflow scripts for each episode, can be found in the respective episode folders inside this the scripts folder.
 
 
-### Data
+#### Data
 
 Inside the `nf-training` folder download the workshop dataset from Figshare, [https://figshare.com/articles/dataset/RNA-seq\_training\_dataset/14822481](https://figshare.com/articles/dataset/RNA-seq_training_dataset/14822481)
 
@@ -118,23 +125,23 @@ tar -xvf  data.tar.gz
 rm data.tar.gz
 ```
 
-## Visual Studio Code editor setup
+### Visual Studio Code editor setup
 
 Any text editor can be used to write Nextflow scripts. A recommended  code editor is [Visual Studio Code](https://code.visualstudio.com/).
 
 Go to [Visual Studio Code](https://code.visualstudio.com/) and you should see a download button. The button or buttons should be specific to your platform and the download package should be  installable.
 
 
-### Nextflow language support in Visual Studio Code
+#### Nextflow language support in Visual Studio Code
 
 You can add Nextflow language support in Visual Studio Code by clicking the [install](https://marketplace.visualstudio.com/items?itemName=nextflow.nextflow) button on the Nextflow language extension.
 
 
-## Nextflow install without conda
+### Nextflow install without conda
 
 Nextflow can be used on any POSIX-compatible system (Linux, macOS, etc), and on Windows through WSL. It requires Bash 3.2 (or later) and Java 11 (or later, up to 22) to be installed
 
-## Nextflow installation
+### Nextflow installation
 
 Install the latest version of Nextflow copy \& pasting the following snippet in a terminal window:
 
@@ -146,7 +153,7 @@ java -version
 curl -s https://get.nextflow.io | bash
 ```
 
-## Add Nextflow binary to your user's PATH:
+### Add Nextflow binary to your user's PATH:
 
 ```bash
 mv nextflow ~/bin/
@@ -160,14 +167,31 @@ Check the correct installation running the following command:
 nextflow info
 ```
 
-## nf-core/tools installation without conda
+### nf-core/tools installation without conda
 
-### Pip
+#### Pip
 
 ```bash
 pip install nf-core
 ```
 
+## Running exercises remotely in your web-browser through Gitpod.
 
+Gitpod is a cloud-based computing environment that is accessed using
+your web-browser. You can click the button below to open up a
+Gitpod instance ready for training. This Gitpod environment comes
+with the tools necessary for the exercises already installed.
+You'll be presented with a VSCode-like interface in your browser,
+which has a file explorer panel on the left, a main panel in which
+to view and edit files, and a panel below that includes a terminal
+in which to run unix commands.
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/carpentries-incubator/workflows-nextflow)
+
+Gitpod sessions automatically close after some period of inactivity.
+To open your session again, go to the [Gitpod Dashboard](https://gitpod.io/workspaces)
+where you can find and reopen any session.
+
+Gitpod gives each user 10 hours usage allocation per month ( 50 if you
+connect your LinkedIn account). 
 
