@@ -22,6 +22,12 @@ tasks:
       && conda clean --all --force-pkgs-dirs --yes
       nextflow self-update
       unset JAVA_TOOL_OPTIONS
+  # Sets up a terminal in the correct location.
+  # This must be the last task in the list
+  - name: Terminal for training exercises
+    command: |
+      mkdir -p nf-training  # Create the directory
+      cd nf-training        # Change into the directory
 
 vscode:
   extensions: # based on nf-core.nf-core-extensionpack
