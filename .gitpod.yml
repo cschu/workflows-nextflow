@@ -22,6 +22,9 @@ tasks:
       && conda clean --all --force-pkgs-dirs --yes \
       && nextflow self-update \
       && exit
+  # Open Carpentries training material in a side panel.
+  - name: Open training material
+    command: gp preview https://carpentries-incubator.github.io/workflows-nextflow/ && exit
   # Sets up a terminal in the correct location.
   # This must be the last task in the list
   - name: Terminal for training exercises
