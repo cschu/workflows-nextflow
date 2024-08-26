@@ -18,7 +18,7 @@ tasks:
       conda install --yes --update-all \
         salmon=1.5 \
         fastqc=0.11 \
-        multiqc=1.10 \
+        multiqc \
       && conda clean --all --force-pkgs-dirs --yes \
       && nextflow self-update \
       && exit
