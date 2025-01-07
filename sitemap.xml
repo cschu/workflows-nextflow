@@ -46,7 +46,13 @@
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/aio.html</loc>
+  </url>
+  <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/discuss.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/images.html</loc>
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/index.html</loc>
@@ -97,10 +103,22 @@
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/aio.html</loc>
+  </url>
+  <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/discuss.html</loc>
   </url>
   <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/images.html</loc>
+  </url>
+  <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/index.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/instructor-notes.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/key-points.html</loc>
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/learner_profiles.html</loc>
@@ -110,6 +128,12 @@
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/reference.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor-notes.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/key-points.html</loc>
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/learner_profiles.html</loc>
