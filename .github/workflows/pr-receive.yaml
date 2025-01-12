@@ -25,9 +25,9 @@ jobs:
       - name: "Upload PR number"
         id: upload
         if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: pr
+          name: pr-${{ matrix.runs-on }}
           path: ${{ github.workspace }}/NR
       - name: "Get Invalid Hashes File"
         id: hash
@@ -107,22 +107,22 @@ jobs:
         shell: Rscript {0}
 
       - name: "Upload PR"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: pr
+          name: pr-${{ matrix.runs-on }}
           path: ${{ env.PR }}
 
       - name: "Upload Diff"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: diff
+          name: diff-${{ matrix.runs-on }}
           path: ${{ env.CHIVE }}
           retention-days: 1
 
       - name: "Upload Build"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: built
+          name: built-${{ matrix.runs-on }}
           path: ${{ env.MD }}
           retention-days: 1
 
