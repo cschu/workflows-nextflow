@@ -64,8 +64,8 @@ episodes:
 - 03-channels.md
 - 04-processes-part1.md
 - 05-processes-part2.md
-- 06-workflow.md
-- 07-operators.md
+- 06-operators.md
+- 07-workflow.md
 - 08-reporting.md
 - 09-configuration.md
 - 10-workflow_checkpoint_caching.md
