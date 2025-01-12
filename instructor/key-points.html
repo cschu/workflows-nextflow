@@ -306,7 +306,7 @@
 <div class="accordion accordion-flush" id="accordionFlush7">
   <div class="accordion-item">
     <div class="accordion-header" id="flush-heading7">
-        <a href="06-workflow.html">6. Workflow</a>
+        <a href="06-operators.html">6. Operators</a>
     </div>
 <!--/div.accordion-header-->
 
@@ -318,7 +318,7 @@
 <div class="accordion accordion-flush" id="accordionFlush8">
   <div class="accordion-item">
     <div class="accordion-header" id="flush-heading8">
-        <a href="07-operators.html">7. Operators</a>
+        <a href="07-workflow.html">7. Workflow</a>
     </div>
 <!--/div.accordion-header-->
 
@@ -503,7 +503,18 @@ qualifier.</li>
 <li>Files produced within a process and defined as <code>output</code>
 can be saved to a directory using the <code>publishDir</code>
 directive.</li>
-</ul></section><section id="06-workflow"><h2 class="section-heading"><a href="06-workflow.html">Workflow</a></h2>
+</ul></section><section id="06-operators"><h2 class="section-heading"><a href="06-operators.html">Operators</a></h2>
+<hr class="half-width">
+<ul>
+<li>Nextflow <em>operators</em> are methods that allow you to modify,
+set or view channels.</li>
+<li>Operators can be separated in to several groups; filtering ,
+transforming , splitting , combining , forking and Maths operators</li>
+<li>To use an operator use the dot notation after the Channel object
+e.g. <code>my_ch.view()</code>.</li>
+<li>You can parse text items emitted by a channel, that are formatted
+using the CSV format, using the <code>splitCsv</code> operator.</li>
+</ul></section><section id="07-workflow"><h2 class="section-heading"><a href="07-workflow.html">Workflow</a></h2>
 <hr class="half-width">
 <ul>
 <li>A Nextflow workflow is defined by invoking <code>processes</code>
@@ -517,17 +528,6 @@ to a Nextflow variable.</li>
 <li>Multiple outputs from a single process can be accessed using the
 list syntax <code>[]</code> and it’s index or by referencing the a named
 process output .</li>
-</ul></section><section id="07-operators"><h2 class="section-heading"><a href="07-operators.html">Operators</a></h2>
-<hr class="half-width">
-<ul>
-<li>Nextflow <em>operators</em> are methods that allow you to modify,
-set or view channels.</li>
-<li>Operators can be separated in to several groups; filtering ,
-transforming , splitting , combining , forking and Maths operators</li>
-<li>To use an operator use the dot notation after the Channel object
-e.g. <code>my_ch.view()</code>.</li>
-<li>You can parse text items emitted by a channel, that are formatted
-using the CSV format, using the <code>splitCsv</code> operator.</li>
 </ul></section><section id="08-reporting"><h2 class="section-heading"><a href="08-reporting.html">Reporting</a></h2>
 <hr class="half-width">
 <ul>

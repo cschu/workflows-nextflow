@@ -16,10 +16,16 @@
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/05-processes-part2.html</loc>
   </url>
   <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/06-operators.html</loc>
+  </url>
+  <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/06-workflow.html</loc>
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/07-operators.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/07-workflow.html</loc>
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/08-reporting.html</loc>
@@ -73,10 +79,16 @@
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/05-processes-part2.html</loc>
   </url>
   <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/06-operators.html</loc>
+  </url>
+  <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/06-workflow.html</loc>
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/07-operators.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/07-workflow.html</loc>
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/08-reporting.html</loc>
