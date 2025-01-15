@@ -243,13 +243,117 @@ workflow {
 
 In this example `params.which_stat`, defined outside the workflow scope, can be accessed inside the `workflow` scope.
 
+## Handling workflow metadata
+
+It can be useful to communicate various metadata to the user, such as printing the pipeline parameters to the screen. This can be done using the the `log.info` command and a multiline string statement. The string method `.stripIndent()` command is used to remove the indentation on multi-line strings. `log.info` also saves the output to the log execution file `.nextflow.log`.
+
+```groovy 
+log.info """\
+         which_stat: ${params.which_stat}
+         """
+         .stripIndent()
+```
+
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+## log.info
+
+Modify the `workflow_04.nf` to print all the pipeline parameters by using a single `log.info` command and a multiline string statement.
+See an example [here](https://github.com/nextflow-io/rnaseq-nf/blob/3b5b49f/main.nf#L41-L48).
+
+```bash 
+$ nextflow run workflow_04.nf --which_stat mean,max,min --input_data 'data/inflammation*.csv' --output_dir results
+```
+
+Look at the output log `.nextflow.log`.
+
+:::::::::::::::  solution
+
+## Solution
+
+Below is an example log.info command printing all the pipeline parameters.
+
+```groovy 
+log.info """\
+         I N F L A M M A T I O N - N F   P I P E L I N E
+         ===============================================
+         input_data : ${params.input_data}
+         statistic  : ${params.which_stat}
+         output_dir : ${params.output_dir}
+         """
+         .stripIndent()
+```
+
+```bash 
+$ less .nextflow.log
+```
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+## Handle completion event
+
+This step shows how to execute an action when the pipeline completes the execution.
+
+**Note:** that Nextflow processes define the execution of asynchronous tasks i.e. they are not executed one after another as they are written in the pipeline script as it would happen in a common imperative programming language.
+
+We can use the `workflow.onComplete` event handler to print a confirmation message when the script completes.
+
+```groovy
+workflow.onComplete {
+    log.info ( workflow.success ? "\nDone! Your results are in ${params.output_dir}/collated\n" : "Oops .. something went wrong" )
+}
+```
+
+This code uses the ternary operator that is a shortcut expression that is equivalent to an if/else branch assigning some value to a variable.
+
+```source
+If expression is true? "set value to a" : "else set value to b"
+```
+
+Try to run it by using the following command:
+
+```bash
+$ nextflow run workflow_04.nf --which_stat mean,max,min --input_data 'data/inflammation*.csv' --output_dir results
+```
+
+```output
+[..truncated..]
+Done! Your results are in results/collated
+```
+
+## Metrics and reports
+
+Nextflow is able to produce multiple reports and charts providing several runtime metrics and execution information.
+
+- The `-with-report` option enables the creation of the workflow execution report.
+
+- The `-with-trace` option enables the create of a tab separated file containing runtime information for each executed task, including: submission time, start time, completion time, cpu and memory used..
+
+- The `-with-timeline` option enables the creation of the workflow timeline report showing how processes where executed along time. This may be useful to identify most time consuming tasks and bottlenecks. See an example at this [link](https://www.nextflow.io/docs/latest/tracing.html#timeline-report).
+
+- The `-with-dag` option enables to rendering of the workflow execution direct acyclic graph representation.
+  **Note:** this feature requires the installation of [Graphviz](https://graphviz.org/), an open source graph visualization software,  in your system.
+
+More information can be found [here](https://www.nextflow.io/docs/latest/tracing.html).
+
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
 - A Nextflow workflow is defined by invoking `processes` inside the `workflow` scope.
 - A process is invoked like a function inside the `workflow` scope passing any required input parameters as arguments. e.g. `calculate_statistic(calculations_ch)`.
 - Process outputs can be accessed using the `out` attribute for the respective `process` object or assigning the output to a Nextflow variable. 
-- Multiple outputs from a single process can be accessed using the list syntax `[]` and it's index or by referencing the a named process output .
+- Multiple outputs from a single process can be accessed using the list syntax `[]` and it's index or by referencing the a named process output.
+- Nextflow can combine tasks (processes) and manage data flows using channels into a single pipeline/workflow.
+- A Workflow can be parameterised using `params`. The value of these parameters can be captured in a log file using  `log.info`
+- Workflow steps are connected via their `inputs` and `outputs` using `Channels`.
+- Intermediate pipeline results can be transformed using Channel `operators` such as `combine`.
+- Nextflow can execute an action when the pipeline completes the execution using the `workflow.onComplete` event handler to print a confirmation message.
+- Nextflow is able to produce multiple reports and charts providing several runtime metrics and execution information using the command line options `-with-report`, `-with-trace`, `-with-timeline` and produce a graph using `-with-dag`.
+
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
