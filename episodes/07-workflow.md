@@ -248,11 +248,6 @@ workflow {
 
 In this example `params.which_stat`, defined outside the workflow scope, can be accessed inside the `workflow` scope.
 
-:::::::::::::::::::::::::
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
-
-
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
