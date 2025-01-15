@@ -272,6 +272,9 @@
       <div class="accordion-body">
         <ul><li><a href="#workflow">Workflow</a></li>
 <li><a href="#workflow-definition">Workflow definition</a></li>
+<li><a href="#handling-workflow-metadata">Handling workflow metadata</a></li>
+<li><a href="#handle-completion-event">Handle completion event</a></li>
+<li><a href="#metrics-and-reports">Metrics and reports</a></li>
         </ul></div><!--/div.accordion-body-->
     </div><!--/div.accordion-collapse-->
 
@@ -381,7 +384,7 @@
       </div>
       <hr></nav><main id="main-content" class="main-content"><div class="container lesson-content">
         <h1>Workflow</h1>
-        <p>Last updated on 2025-01-12 |
+        <p>Last updated on 2025-01-15 |
 
         <a href="https://github.com/carpentries-incubator/workflows-nextflow/edit/main/episodes/07-workflow.md" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
 
@@ -463,47 +466,67 @@ provide them in the same order in which they are declared in the
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a> process FASTQC <span class="op">{</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>      <span class="fu">tuple</span><span class="op">(</span><span class="fu">val</span><span class="op">(</span>sample_id<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>reads<span class="op">))</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>    output<span class="op">:</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>      path <span class="st">"fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs"</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>    script<span class="op">:</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>      <span class="st">"""</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="st">      mkdir fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="st">      fastqc -o fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs -f fastq -q </span><span class="ss">${</span>reads<span class="ss">}</span></span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="st">      """</span></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>process MULTIQC <span class="op">{</span></span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>    publishDir <span class="st">"results/mqc"</span></span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>      path transcriptome</span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>    output<span class="op">:</span></span>
-<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>      path <span class="st">"*"</span></span>
-<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>    script<span class="op">:</span></span>
-<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>      <span class="st">"""</span></span>
-<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="st">      multiqc .</span></span>
-<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="st">      """</span></span>
-<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a>workflow <span class="op">{</span></span>
-<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a>    read_pairs_ch <span class="op">=</span> channel<span class="op">.</span><span class="fu">fromFilePairs</span><span class="op">(</span><span class="st">'data/yeast/reads/*_{1,2}.fq.gz'</span><span class="op">,</span>checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)</span></span>
-<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>    <span class="co">//index process takes 1 input channel as a argument</span></span>
-<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>    <span class="co">//assign process output to Nextflow variable fastqc_obj</span></span>
-<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>    fastqc_obj <span class="op">=</span> <span class="fu">FASTQC</span><span class="op">(</span>read_pairs_ch<span class="op">)</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a> process calculate_statistic <span class="op">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>    publishDir <span class="st">"</span><span class="ss">${</span>params<span class="op">.</span>output_dir<span class="ss">}</span><span class="st">/stats"</span><span class="op">,</span> mode<span class="op">:</span> <span class="st">"copy"</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>    tag <span class="st">"</span><span class="ss">${</span>data<span class="op">.</span><span class="fu">getSimpleName</span><span class="op">()</span><span class="ss">}</span><span class="st">-</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">"</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>which_stat<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>data<span class="op">)</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>which_stat<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"*_</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">.txt"</span><span class="op">)</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>    script<span class="op">:</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>    </span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>    fn <span class="op">=</span> data<span class="op">.</span>name</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="st">    calc_stats.py --</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st"> </span><span class="ss">${</span>data<span class="ss">}</span><span class="st"> &gt; </span><span class="ss">${</span>fn<span class="ss">}</span><span class="st">_</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">.txt</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a>process collate_statistic <span class="op">{</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>    publishDir <span class="st">"</span><span class="ss">${</span>params<span class="op">.</span>output_dir<span class="ss">}</span><span class="st">/collated"</span><span class="op">,</span> mode<span class="op">:</span> <span class="st">"copy"</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a>    tag <span class="st">"</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">"</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>which_stat<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>data<span class="op">)</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>which_stat<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"*.collated.txt"</span><span class="op">)</span></span>
 <span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>    <span class="co">//quant channel takes 1 input channel as an argument</span></span>
-<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a>    <span class="co">//We use the collect operator to gather multiple channel items into a single item</span></span>
-<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a>    <span class="fu">MULTIQC</span><span class="op">(</span>fastqc_obj<span class="op">.</span><span class="fu">collect</span><span class="op">()).</span><span class="fu">view</span><span class="op">()</span></span>
-<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="op">}</span></span></code></pre>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>    script<span class="op">:</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a>    </span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="st">    ls </span><span class="ss">${</span>data<span class="ss">}</span><span class="st"> | cut -f 1 -d . | tr "</span><span class="sc">\\</span><span class="st">n" "</span><span class="sc">\\</span><span class="st">t" | sed "s/</span><span class="er">\$</span><span class="st">/</span><span class="sc">\\</span><span class="st">n/" &gt; </span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">.collated.txt</span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="st">    paste </span><span class="ss">${</span>data<span class="ss">}</span><span class="st"> &gt;&gt; </span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">.collated.txt</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a>    which_stat_ch <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span>params<span class="op">.</span>which_stat<span class="op">.</span><span class="fu">split</span><span class="op">(</span><span class="st">","</span><span class="op">))</span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span> <span class="op">{</span> it <span class="op">==</span> <span class="st">"max"</span> <span class="op">||</span> it <span class="op">==</span> <span class="st">"min"</span> <span class="op">||</span> it <span class="op">==</span> <span class="st">"mean"</span> <span class="op">}</span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a>    </span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a>    input_ch <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span>params<span class="op">.</span>input_data<span class="op">)</span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a>    </span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a>    calculations_ch <span class="op">=</span> which_stat_ch<span class="op">.</span><span class="fu">combine</span><span class="op">(</span>input_ch<span class="op">)</span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a>    </span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>    stats_ch <span class="op">=</span> <span class="fu">calculate_statistic</span><span class="op">(</span>calculations_ch<span class="op">)</span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a>    </span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a>    collate_input_ch <span class="op">=</span> stats_ch<span class="op">.</span><span class="fu">groupTuple</span><span class="op">(</span>by<span class="op">:</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a>    </span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a>    collated_ch <span class="op">=</span> <span class="fu">collate_statistic</span><span class="op">(</span>collate_input_ch<span class="op">)</span></span>
+<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="op">}</span></span></code></pre>
 </div>
 </div>
 <div class="section level3">
 <h3 id="process-outputs">Process outputs<a class="anchor" aria-label="anchor" href="#process-outputs"></a></h3>
 <p>In the previous example we assigned the process output to a Nextflow
-variable <code>fastqc_obj</code>.</p>
+variable <code>stats_ch</code>.</p>
 <p>A process output can also be accessed directly using the
 <code>out</code> attribute for the respective
 <code>process object</code>.</p>
@@ -514,15 +537,18 @@ variable <code>fastqc_obj</code>.</p>
 <pre class="sourceCode groovy" tabindex="0"><code class="sourceCode groovy"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="op">[..</span>truncated<span class="op">..]</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>workflow <span class="op">{</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  read_pairs_ch <span class="op">=</span> channel<span class="op">.</span><span class="fu">fromFilePairs</span><span class="op">(</span><span class="st">'data/yeast/reads/*_{1,2}.fq.gz'</span><span class="op">,</span>checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="fu">FASTQC</span><span class="op">(</span>read_pairs_ch<span class="op">)</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="co">// process output  accessed using the `out` attribute of the process object</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="fu">MULTIQC</span><span class="op">(</span>FASTQC<span class="op">.</span>out<span class="op">.</span><span class="fu">collect</span><span class="op">()).</span><span class="fu">view</span><span class="op">()</span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  MULTIQC<span class="op">.</span>out<span class="op">.</span><span class="fu">view</span><span class="op">()</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="op">}</span></span></code></pre>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  which_stat_ch <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span>params<span class="op">.</span>which_stat<span class="op">.</span><span class="fu">split</span><span class="op">(</span><span class="st">","</span><span class="op">))</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span> <span class="op">{</span> it <span class="op">==</span> <span class="st">"max"</span> <span class="op">||</span> it <span class="op">==</span> <span class="st">"min"</span> <span class="op">||</span> it <span class="op">==</span> <span class="st">"mean"</span> <span class="op">}</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    </span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    input_ch <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span>params<span class="op">.</span>input_data<span class="op">)</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    </span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    calculations_ch <span class="op">=</span> which_stat_ch<span class="op">.</span><span class="fu">combine</span><span class="op">(</span>input_ch<span class="op">)</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>    </span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>    <span class="fu">calculate_statistic</span><span class="op">(</span>calculations_ch<span class="op">)</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>    </span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>    <span class="co">// process output accessed using the `out` attribute of the process object</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>    collated_ch <span class="op">=</span> <span class="fu">collate_statistic</span><span class="op">(</span>calculate_statistic<span class="op">.</span>out<span class="op">.</span><span class="fu">groupTuple</span><span class="op">(</span>by<span class="op">:</span> <span class="dv">0</span><span class="op">))</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="op">}</span></span></code></pre>
 </div>
 <p>When a process defines two or more output channels, each of them can
 be accessed using the list element operator e.g. <code>out[0]</code>,
@@ -536,48 +562,70 @@ are multiple outputs.</p>
 <code>emit:</code> option to define a named identifier that can be used
 to reference the channel in the external scope.</p>
 <p>For example in the script below we name the output from the
-<code>FASTQC</code> process as <code>fastqc_results</code> using the
+<code>calculate_statistic</code> process as <code>stat</code> using the
 <code>emit:</code> option. We can then reference the output as
-<code>FASTQC.out.fastqc_results</code> in the workflow scope.</p>
+<code>calculate_statistic.out.stat</code> in the workflow scope.</p>
 <div class="codewrapper sourceCode" id="cb4">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="sourceCode groovy" tabindex="0"><code class="sourceCode groovy"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co">//workflow_02.nf</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a> process FASTQC <span class="op">{</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>      tuple <span class="fu">val</span><span class="op">(</span>sample_id<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    output<span class="op">:</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>      path <span class="st">"fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs"</span><span class="op">,</span> emit<span class="op">:</span> fastqc_results</span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    script<span class="op">:</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>      <span class="st">"""</span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="st">      mkdir fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs</span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="st">      fastqc -o fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs </span><span class="ss">${</span>reads<span class="ss">}</span></span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="st">      """</span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>process MULTIQC <span class="op">{</span></span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>    publishDir <span class="st">"results/mqc"</span></span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>      path fastqc_results</span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>    output<span class="op">:</span></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>      path <span class="st">"*"</span></span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>    script<span class="op">:</span></span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>      <span class="st">"""</span></span>
-<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="st">      multiqc .</span></span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="st">      """</span></span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a></span>
-<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>workflow <span class="op">{</span></span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>    read_pairs_ch <span class="op">=</span> channel<span class="op">.</span><span class="fu">fromFilePairs</span><span class="op">(</span><span class="st">'data/yeast/reads/ref*_{1,2}.fq.gz'</span><span class="op">,</span>checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)</span></span>
-<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>    </span>
-<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>    <span class="co">//FASTQC process takes 1 input channel as a argument</span></span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>    <span class="fu">FASTQC</span><span class="op">(</span>read_pairs_ch<span class="op">)</span></span>
-<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>    <span class="co">//MULTIQC channel takes 1 input channels as arguments</span></span>
-<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>    <span class="fu">MULTIQC</span><span class="op">(</span>FASTQC<span class="op">.</span>out<span class="op">.</span>fastqc_results<span class="op">.</span><span class="fu">collect</span><span class="op">()).</span><span class="fu">view</span><span class="op">()</span></span>
-<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="op">}</span></span></code></pre>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a> process calculate_statistic <span class="op">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    publishDir <span class="st">"</span><span class="ss">${</span>params<span class="op">.</span>output_dir<span class="ss">}</span><span class="st">/stats"</span><span class="op">,</span> mode<span class="op">:</span> <span class="st">"copy"</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    tag <span class="st">"</span><span class="ss">${</span>data<span class="op">.</span><span class="fu">getSimpleName</span><span class="op">()</span><span class="ss">}</span><span class="st">-</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">"</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>which_stat<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>data<span class="op">)</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>which_stat<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"*_</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">.txt"</span><span class="op">),</span> emit<span class="op">:</span> <span class="st">"stat"</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    script<span class="op">:</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    </span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    fn <span class="op">=</span> data<span class="op">.</span>name</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="st">    calc_stats.py --</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st"> </span><span class="ss">${</span>data<span class="ss">}</span><span class="st"> &gt; </span><span class="ss">${</span>fn<span class="ss">}</span><span class="st">_</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">.txt</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>process collate_statistic <span class="op">{</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>    publishDir <span class="st">"</span><span class="ss">${</span>params<span class="op">.</span>output_dir<span class="ss">}</span><span class="st">/collated"</span><span class="op">,</span> mode<span class="op">:</span> <span class="st">"copy"</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>    tag <span class="st">"</span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">"</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>which_stat<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>data<span class="op">)</span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>which_stat<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"*.collated.txt"</span><span class="op">)</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>    script<span class="op">:</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a>    </span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="st">    ls </span><span class="ss">${</span>data<span class="ss">}</span><span class="st"> | cut -f 1 -d . | tr "</span><span class="sc">\\</span><span class="st">n" "</span><span class="sc">\\</span><span class="st">t" | sed "s/</span><span class="er">\$</span><span class="st">/</span><span class="sc">\\</span><span class="st">n/" &gt; </span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">.collated.txt</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="st">    paste </span><span class="ss">${</span>data<span class="ss">}</span><span class="st"> &gt;&gt; </span><span class="ss">${</span>which_stat<span class="ss">}</span><span class="st">.collated.txt</span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a>    which_stat_ch <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span>params<span class="op">.</span>which_stat<span class="op">.</span><span class="fu">split</span><span class="op">(</span><span class="st">","</span><span class="op">))</span></span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span> <span class="op">{</span> it <span class="op">==</span> <span class="st">"max"</span> <span class="op">||</span> it <span class="op">==</span> <span class="st">"min"</span> <span class="op">||</span> it <span class="op">==</span> <span class="st">"mean"</span> <span class="op">}</span></span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a>    </span>
+<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a>    input_ch <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span>params<span class="op">.</span>input_data<span class="op">)</span></span>
+<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a>    </span>
+<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a>    calculations_ch <span class="op">=</span> which_stat_ch<span class="op">.</span><span class="fu">combine</span><span class="op">(</span>input_ch<span class="op">)</span></span>
+<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a>    </span>
+<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a>    stats_ch <span class="op">=</span> <span class="fu">calculate_statistic</span><span class="op">(</span>calculations_ch<span class="op">).</span>stat</span>
+<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a>    </span>
+<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a>    collate_input_ch <span class="op">=</span> stats_ch<span class="op">.</span><span class="fu">groupTuple</span><span class="op">(</span>by<span class="op">:</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a>    </span>
+<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a>    collated_ch <span class="op">=</span> <span class="fu">collate_statistic</span><span class="op">(</span>collate_input_ch<span class="op">)</span></span>
+<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a><span class="op">}</span></span></code></pre>
 </div>
 </div>
 <div class="section level3">
@@ -591,73 +639,58 @@ the outer scope:</p>
 <pre class="sourceCode groovy" tabindex="0"><code class="sourceCode groovy"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co">//workflow_03.nf</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="op">[..</span>truncated<span class="op">..]</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>params<span class="op">.</span>reads <span class="op">=</span> <span class="st">'data/yeast/reads/*_{1,2}.fq.gz'</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>params<span class="op">.</span>which_stat <span class="op">=</span> <span class="st">'mean'</span></span>
 <span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a></span>
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>workflow <span class="op">{</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  reads_ch_ <span class="op">=</span> channel<span class="op">.</span><span class="fu">fromFilePairs</span><span class="op">(</span>params<span class="op">.</span>reads<span class="op">)</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="fu">FASTQC</span><span class="op">(</span>reads_ch_<span class="op">)</span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="fu">MULTIQC</span><span class="op">(</span>FASTQC<span class="op">.</span>out<span class="op">.</span>fastqc_results<span class="op">.</span><span class="fu">collect</span><span class="op">()).</span><span class="fu">view</span><span class="op">()</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="op">}</span></span></code></pre>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>    which_stat_ch <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span>params<span class="op">.</span>which_stat<span class="op">.</span><span class="fu">split</span><span class="op">(</span><span class="st">","</span><span class="op">))</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span> <span class="op">{</span> it <span class="op">==</span> <span class="st">"max"</span> <span class="op">||</span> it <span class="op">==</span> <span class="st">"min"</span> <span class="op">||</span> it <span class="op">==</span> <span class="st">"mean"</span> <span class="op">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>    </span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>    input_ch <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span>params<span class="op">.</span>input_data<span class="op">)</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>    </span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>    calculations_ch <span class="op">=</span> which_stat_ch<span class="op">.</span><span class="fu">combine</span><span class="op">(</span>input_ch<span class="op">)</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>    </span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>    stats_ch <span class="op">=</span> <span class="fu">calculate_statistic</span><span class="op">(</span>calculations_ch<span class="op">).</span>stat</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>    </span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>    collate_input_ch <span class="op">=</span> stats_ch<span class="op">.</span><span class="fu">groupTuple</span><span class="op">(</span>by<span class="op">:</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>    </span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>    collated_ch <span class="op">=</span> <span class="fu">collate_statistic</span><span class="op">(</span>collate_input_ch<span class="op">)</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="op">}</span></span></code></pre>
 </div>
-<p>In this example <code>params.reads</code>, defined outside the
+<p>In this example <code>params.which_stat</code>, defined outside the
 workflow scope, can be accessed inside the <code>workflow</code>
 scope.</p>
-<div id="workflow-1" class="callout challenge">
-<div class="callout-square">
-<i class="callout-icon" data-feather="zap"></i>
 </div>
-<div id="workflow-1" class="callout-inner">
-<h3 class="callout-title">Workflow</h3>
-<div class="callout-content">
-<p>Connect the output of the process <code>FASTQC</code> to
-<code>PARSEZIP</code> in the Nextflow script
-<code>workflow_exercise.nf</code>.</p>
-<p><strong>Note:</strong> You will need to pass the
-<code>read_pairs_ch</code> as an argument to FASTQC and you will need to
-use the <code>collect</code> operator to gather the items in the FASTQC
-channel output to a single List item.</p>
+</section><section><h2 class="section-heading" id="handling-workflow-metadata">Handling workflow metadata<a class="anchor" aria-label="anchor" href="#handling-workflow-metadata"></a></h2>
+<hr class="half-width"><p>It can be useful to communicate various metadata to the user, such as
+printing the pipeline parameters to the screen. This can be done using
+the the <code>log.info</code> command and a multiline string statement.
+The string method <code>.stripIndent()</code> command is used to remove
+the indentation on multi-line strings. <code>log.info</code> also saves
+the output to the log execution file <code>.nextflow.log</code>.</p>
 <div class="codewrapper sourceCode" id="cb6">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="sourceCode groovy" tabindex="0"><code class="sourceCode groovy"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">//workflow_exercise.nf</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>params<span class="op">.</span>reads <span class="op">=</span> <span class="st">'data/yeast/reads/*_{1,2}.fq.gz'</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>process FASTQC <span class="op">{</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a> input<span class="op">:</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a> tuple <span class="fu">val</span><span class="op">(</span>sample_id<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a> output<span class="op">:</span></span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a> path <span class="st">"fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs/*.zip"</span></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a> script<span class="op">:</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a> <span class="st">"""</span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="st"> mkdir fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs</span></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="st"> fastqc -o fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs  </span><span class="ss">${</span>reads<span class="ss">}</span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="st"> """</span></span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>process PARSEZIP <span class="op">{</span></span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a> publishDir <span class="st">"results/fqpass"</span><span class="op">,</span> mode<span class="op">:</span><span class="st">"copy"</span></span>
-<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a> input<span class="op">:</span></span>
-<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a> path fastqc_logs</span>
-<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a></span>
-<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a> output<span class="op">:</span></span>
-<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a> path <span class="st">'pass_basic.txt'</span></span>
-<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a></span>
-<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a> script<span class="op">:</span></span>
-<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a> <span class="st">"""</span></span>
-<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="st"> for zip in *.zip; do zipgrep 'Basic Statistics' </span><span class="er">\$</span><span class="st">zip|grep 'summary.txt'; done &gt; pass_basic.txt</span></span>
-<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="st"> """</span></span>
-<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a>read_pairs_ch <span class="op">=</span> channel<span class="op">.</span><span class="fu">fromFilePairs</span><span class="op">(</span>params<span class="op">.</span>reads<span class="op">,</span>checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)</span></span>
-<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a></span>
-<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a>workflow <span class="op">{</span></span>
-<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">//connect process FASTQC and PARSEZIP</span></span>
-<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">// remember to use the collect operator on the FASTQC output</span></span>
-<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="op">}</span></span></code></pre>
+<pre class="sourceCode groovy" tabindex="0"><code class="sourceCode groovy"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>log<span class="op">.</span><span class="fu">info</span> <span class="st">"""</span><span class="op">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="st">         which_stat: </span><span class="ss">${</span>params<span class="op">.</span>which_stat<span class="ss">}</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="st">         """</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>         <span class="op">.</span><span class="fu">stripIndent</span><span class="op">()</span></span></code></pre>
 </div>
+<div id="log.info" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div id="log.info" class="callout-inner">
+<h3 class="callout-title">log.info</h3>
+<div class="callout-content">
+<p>Modify the <code>workflow_04.nf</code> to print all the pipeline
+parameters by using a single <code>log.info</code> command and a
+multiline string statement. See an example <a href="https://github.com/nextflow-io/rnaseq-nf/blob/3b5b49f/main.nf#L41-L48" class="external-link">here</a>.</p>
+<div class="codewrapper sourceCode" id="cb7">
+<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">$</span> nextflow run workflow_04.nf <span class="at">--which_stat</span> mean,max,min <span class="at">--input_data</span> <span class="st">'data/inflammation*.csv'</span> <span class="at">--output_dir</span> results</span></code></pre>
+</div>
+<p>Look at the output log <code>.nextflow.log</code>.</p>
 </div>
 </div>
 </div>
@@ -666,73 +699,81 @@ channel output to a single List item.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
-<div class="codewrapper sourceCode" id="cb7">
+<p>Below is an example log.info command printing all the pipeline
+parameters.</p>
+<div class="codewrapper sourceCode" id="cb8">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="sourceCode groovy" tabindex="0"><code class="sourceCode groovy"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co">//workflow_exercise.nf</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>params<span class="op">.</span>reads <span class="op">=</span> <span class="st">'data/yeast/reads/*_{1,2}.fq.gz'</span></span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>process FASTQC <span class="op">{</span></span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  tuple <span class="fu">val</span><span class="op">(</span>sample_id<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  output<span class="op">:</span></span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  path <span class="st">"fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs/*.zip"</span></span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  script<span class="op">:</span></span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  <span class="st">"""</span></span>
-<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="st">  mkdir fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs</span></span>
-<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="st">  fastqc -o fastqc_</span><span class="ss">${</span>sample_id<span class="ss">}</span><span class="st">_logs  </span><span class="ss">${</span>reads<span class="ss">}</span></span>
-<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="st">  """</span></span>
-<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>process PARSEZIP <span class="op">{</span></span>
-<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>  publishDir <span class="st">"results/fqpass"</span><span class="op">,</span> mode<span class="op">:</span><span class="st">"copy"</span></span>
-<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>  path fastqc_logs</span>
-<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a></span>
-<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>  output<span class="op">:</span></span>
-<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>  path <span class="st">'pass_basic.txt'</span></span>
-<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a></span>
-<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>  script<span class="op">:</span></span>
-<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a>  <span class="st">"""</span></span>
-<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="st">  for zip in *.zip; do zipgrep 'Basic Statistics' </span><span class="er">\$</span><span class="st">zip|grep 'summary.txt'; done &gt; pass_basic.txt</span></span>
-<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="st">  """</span></span>
-<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a></span>
-<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a>read_pairs_ch <span class="op">=</span> channel<span class="op">.</span><span class="fu">fromFilePairs</span><span class="op">(</span>params<span class="op">.</span>reads<span class="op">,</span>checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)</span></span>
-<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a></span>
-<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a>workflow <span class="op">{</span></span>
-<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a>  <span class="fu">PARSEZIP</span><span class="op">(</span><span class="fu">FASTQC</span><span class="op">(</span>read_pairs_ch<span class="op">).</span><span class="fu">collect</span><span class="op">())</span></span>
-<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a><span class="op">}</span></span></code></pre>
-</div>
-<div class="codewrapper sourceCode" id="cb8">
-<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">$</span> nextflow run workflow_exercise.nf</span></code></pre>
+<pre class="sourceCode groovy" tabindex="0"><code class="sourceCode groovy"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>log<span class="op">.</span><span class="fu">info</span> <span class="st">"""</span><span class="op">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="st">         I N F L A M M A T I O N - N F   P I P E L I N E</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="st">         ===============================================</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="st">         input_data : </span><span class="ss">${</span>params<span class="op">.</span>input_data<span class="ss">}</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="st">         statistic  : </span><span class="ss">${</span>params<span class="op">.</span>which_stat<span class="ss">}</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="st">         output_dir : </span><span class="ss">${</span>params<span class="op">.</span>output_dir<span class="ss">}</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="st">         """</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>         <span class="op">.</span><span class="fu">stripIndent</span><span class="op">()</span></span></code></pre>
 </div>
 <div class="codewrapper sourceCode" id="cb9">
 <h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="ex">$</span> wc <span class="at">-l</span>  results/fqpass/pass_basic.txt</span></code></pre>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="ex">$</span> less .nextflow.log</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section><h2 class="section-heading" id="handle-completion-event">Handle completion event<a class="anchor" aria-label="anchor" href="#handle-completion-event"></a></h2>
+<hr class="half-width"><p>This step shows how to execute an action when the pipeline completes
+the execution.</p>
+<p><strong>Note:</strong> that Nextflow processes define the execution
+of asynchronous tasks i.e. they are not executed one after another as
+they are written in the pipeline script as it would happen in a common
+imperative programming language.</p>
+<p>We can use the <code>workflow.onComplete</code> event handler to
+print a confirmation message when the script completes.</p>
+<div class="codewrapper sourceCode" id="cb10">
+<h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode groovy" tabindex="0"><code class="sourceCode groovy"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>workflow<span class="op">.</span><span class="fu">onComplete</span> <span class="op">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>    log<span class="op">.</span><span class="fu">info</span> <span class="op">(</span> workflow<span class="op">.</span>success <span class="op">?</span> <span class="st">"</span><span class="sc">\n</span><span class="st">Done! Your results are in </span><span class="ss">${</span>params<span class="op">.</span>output_dir<span class="ss">}</span><span class="st">/collated</span><span class="sc">\n</span><span class="st">"</span> <span class="op">:</span> <span class="st">"Oops .. something went wrong"</span> <span class="op">)</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="op">}</span></span></code></pre>
+</div>
+<p>This code uses the ternary operator that is a shortcut expression
+that is equivalent to an if/else branch assigning some value to a
+variable.</p>
+<pre class="source"><code>If expression is true? "set value to a" : "else set value to b"</code></pre>
+<p>Try to run it by using the following command:</p>
+<div class="codewrapper sourceCode" id="cb12">
+<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="ex">$</span> nextflow run workflow_04.nf <span class="at">--which_stat</span> mean,max,min <span class="at">--input_data</span> <span class="st">'data/inflammation*.csv'</span> <span class="at">--output_dir</span> results</span></code></pre>
 </div>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code><span><span class="fl">18</span></span></code></pre>
+<pre class="output" tabindex="0"><code>[..truncated..]
+Done! Your results are in results/collated</code></pre>
 </div>
-<p>The file <code>results/fqpass/pass_basic.txt</code> should have 18
-lines. If you only have two lines it might mean that you did not use
-<code>collect()</code> operator on the FASTC output channel.</p>
-</div>
-</div>
-</div>
-</div>
+</section><section><h2 class="section-heading" id="metrics-and-reports">Metrics and reports<a class="anchor" aria-label="anchor" href="#metrics-and-reports"></a></h2>
+<hr class="half-width"><p>Nextflow is able to produce multiple reports and charts providing
+several runtime metrics and execution information.</p>
+<ul><li><p>The <code>-with-report</code> option enables the creation of the
+workflow execution report.</p></li>
+<li><p>The <code>-with-trace</code> option enables the create of a tab
+separated file containing runtime information for each executed task,
+including: submission time, start time, completion time, cpu and memory
+used..</p></li>
+<li><p>The <code>-with-timeline</code> option enables the creation of
+the workflow timeline report showing how processes where executed along
+time. This may be useful to identify most time consuming tasks and
+bottlenecks. See an example at this <a href="https://www.nextflow.io/docs/latest/tracing.html#timeline-report" class="external-link">link</a>.</p></li>
+<li><p>The <code>-with-dag</code> option enables to rendering of the
+workflow execution direct acyclic graph representation.
+<strong>Note:</strong> this feature requires the installation of <a href="https://graphviz.org/" class="external-link">Graphviz</a>, an open source graph
+visualization software, in your system.</p></li>
+</ul><p>More information can be found <a href="https://www.nextflow.io/docs/latest/tracing.html" class="external-link">here</a>.</p>
 <div id="keypoints1" class="callout keypoints">
 <div class="callout-square">
 <i class="callout-icon" data-feather="key"></i>
@@ -744,15 +785,32 @@ lines. If you only have two lines it might mean that you did not use
 inside the <code>workflow</code> scope.</li>
 <li>A process is invoked like a function inside the
 <code>workflow</code> scope passing any required input parameters as
-arguments. e.g. <code>FASTQC(reads_ch)</code>.</li>
+arguments. e.g. <code>calculate_statistic(calculations_ch)</code>.</li>
 <li>Process outputs can be accessed using the <code>out</code> attribute
 for the respective <code>process</code> object or assigning the output
 to a Nextflow variable.</li>
 <li>Multiple outputs from a single process can be accessed using the
 list syntax <code>[]</code> and it’s index or by referencing the a named
-process output .</li>
+process output.</li>
+<li>Nextflow can combine tasks (processes) and manage data flows using
+channels into a single pipeline/workflow.</li>
+<li>A Workflow can be parameterised using <code>params</code>. The value
+of these parameters can be captured in a log file using
+<code>log.info</code>
+</li>
+<li>Workflow steps are connected via their <code>inputs</code> and
+<code>outputs</code> using <code>Channels</code>.</li>
+<li>Intermediate pipeline results can be transformed using Channel
+<code>operators</code> such as <code>combine</code>.</li>
+<li>Nextflow can execute an action when the pipeline completes the
+execution using the <code>workflow.onComplete</code> event handler to
+print a confirmation message.</li>
+<li>Nextflow is able to produce multiple reports and charts providing
+several runtime metrics and execution information using the command line
+options <code>-with-report</code>, <code>-with-trace</code>,
+<code>-with-timeline</code> and produce a graph using
+<code>-with-dag</code>.</li>
 </ul></div>
-</div>
 </div>
 </div>
 </section></div> <!-- / div.lesson-content -->
@@ -813,8 +871,8 @@ process output .</li>
   "url": "https://carpentries-incubator.github.io/workflows-nextflow/07-workflow.html",
   "identifier": "https://carpentries-incubator.github.io/workflows-nextflow/07-workflow.html",
   "dateCreated": "2021-02-01",
-  "dateModified": "2025-01-12",
-  "datePublished": "2025-01-14"
+  "dateModified": "2025-01-15",
+  "datePublished": "2025-01-15"
 }
 
   </script><script>

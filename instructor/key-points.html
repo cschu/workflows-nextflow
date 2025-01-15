@@ -521,13 +521,31 @@ using the CSV format, using the <code>splitCsv</code> operator.</li>
 inside the <code>workflow</code> scope.</li>
 <li>A process is invoked like a function inside the
 <code>workflow</code> scope passing any required input parameters as
-arguments. e.g. <code>FASTQC(reads_ch)</code>.</li>
+arguments. e.g. <code>calculate_statistic(calculations_ch)</code>.</li>
 <li>Process outputs can be accessed using the <code>out</code> attribute
 for the respective <code>process</code> object or assigning the output
 to a Nextflow variable.</li>
 <li>Multiple outputs from a single process can be accessed using the
 list syntax <code>[]</code> and it’s index or by referencing the a named
-process output .</li>
+process output.</li>
+<li>Nextflow can combine tasks (processes) and manage data flows using
+channels into a single pipeline/workflow.</li>
+<li>A Workflow can be parameterised using <code>params</code>. The value
+of these parameters can be captured in a log file using
+<code>log.info</code>
+</li>
+<li>Workflow steps are connected via their <code>inputs</code> and
+<code>outputs</code> using <code>Channels</code>.</li>
+<li>Intermediate pipeline results can be transformed using Channel
+<code>operators</code> such as <code>combine</code>.</li>
+<li>Nextflow can execute an action when the pipeline completes the
+execution using the <code>workflow.onComplete</code> event handler to
+print a confirmation message.</li>
+<li>Nextflow is able to produce multiple reports and charts providing
+several runtime metrics and execution information using the command line
+options <code>-with-report</code>, <code>-with-trace</code>,
+<code>-with-timeline</code> and produce a graph using
+<code>-with-dag</code>.</li>
 </ul></section><section id="08-reporting"><h2 class="section-heading"><a href="08-reporting.html">Reporting</a></h2>
 <hr class="half-width">
 <ul>
@@ -652,8 +670,8 @@ and/or adding command line parameters.</li>
   "url": "https://carpentries-incubator.github.io/workflows-nextflow/instructor/key-points.html",
   "identifier": "https://carpentries-incubator.github.io/workflows-nextflow/instructor/key-points.html",
   "dateCreated": "2021-02-01",
-  "dateModified": "2025-01-14",
-  "datePublished": "2025-01-14"
+  "dateModified": "2025-01-15",
+  "datePublished": "2025-01-15"
 }
 
   </script><script>
