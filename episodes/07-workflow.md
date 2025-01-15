@@ -54,46 +54,70 @@ For example:
 
 
 
- process FASTQC {
+ process calculate_statistic {
+    publishDir "${params.output_dir}/stats", mode: "copy"
+    tag "${data.getSimpleName()}-${which_stat}"
+
     input:
-      tuple(val(sample_id), path(reads))
+    tuple val(which_stat), path(data)
+
     output:
-      path "fastqc_${sample_id}_logs"
+    tuple val(which_stat), path("*_${which_stat}.txt")
+
     script:
-      """
-      mkdir fastqc_${sample_id}_logs
-      fastqc -o fastqc_${sample_id}_logs -f fastq -q ${reads}
-      """
+    
+    fn = data.name
+
+    """
+    calc_stats.py --${which_stat} ${data} > ${fn}_${which_stat}.txt
+    """
+
 }
 
-process MULTIQC {
-    publishDir "results/mqc"
+
+process collate_statistic {
+    publishDir "${params.output_dir}/collated", mode: "copy"
+    tag "${which_stat}"
+
     input:
-      path transcriptome
+    tuple val(which_stat), path(data)
+
     output:
-      path "*"
+    tuple val(which_stat), path("*.collated.txt")
+
     script:
-      """
-      multiqc .
-      """
+    
+    """
+    ls ${data} | cut -f 1 -d . | tr "\\n" "\\t" | sed "s/\$/\\n/" > ${which_stat}.collated.txt
+    paste ${data} >> ${which_stat}.collated.txt
+    """
+
+
 }
 
 workflow {
-    read_pairs_ch = channel.fromFilePairs('data/yeast/reads/*_{1,2}.fq.gz',checkIfExists: true)
+    which_stat_ch = Channel.of(params.which_stat.split(","))
+        .filter { it == "max" || it == "min" || it == "mean" }
+    
+    input_ch = Channel.fromPath(params.input_data)
+    
+    calculations_ch = which_stat_ch.combine(input_ch)
+    
+    stats_ch = calculate_statistic(calculations_ch)
+    
+    collate_input_ch = stats_ch.groupTuple(by: 0)
+    
+    collated_ch = collate_statistic(collate_input_ch)
+}
 
-    //index process takes 1 input channel as a argument
-    //assign process output to Nextflow variable fastqc_obj
-    fastqc_obj = FASTQC(read_pairs_ch)
-
-    //quant channel takes 1 input channel as an argument
-    //We use the collect operator to gather multiple channel items into a single item
-    MULTIQC(fastqc_obj.collect()).view()
+workflow.onComplete {
+    log.info ( workflow.success ? "\nDone! Your results are in ${params.output_dir}/collated\n" : "Oops .. something went wrong" )
 }
 ```
 
 ### Process outputs
 
-In the previous example we assigned the process output to a Nextflow variable `fastqc_obj`.
+In the previous example we assigned the process output to a Nextflow variable `stats_ch`.
 
 A process output can also be accessed directly using the `out` attribute for the respective `process object`.
 
@@ -103,14 +127,17 @@ For example:
 [..truncated..]
 
 workflow {
-  read_pairs_ch = channel.fromFilePairs('data/yeast/reads/*_{1,2}.fq.gz',checkIfExists: true)
-
-  FASTQC(read_pairs_ch)
-
-  // process output  accessed using the `out` attribute of the process object
-  MULTIQC(FASTQC.out.collect()).view()
-  MULTIQC.out.view()
-
+  which_stat_ch = Channel.of(params.which_stat.split(","))
+        .filter { it == "max" || it == "min" || it == "mean" }
+    
+    input_ch = Channel.fromPath(params.input_data)
+    
+    calculations_ch = which_stat_ch.combine(input_ch)
+    
+    calculate_statistic(calculations_ch)
+    
+    // process output accessed using the `out` attribute of the process object
+    collated_ch = collate_statistic(calculate_statistic.out.groupTuple(by: 0))
 }
 ```
 
@@ -122,45 +149,71 @@ It can be useful to name the output of a process, especially if there are multip
 
 The process `output` definition allows the use of the `emit:` option to define a named identifier that can be used to reference the channel in the external scope.
 
-For example in the script below we name the output from the `FASTQC` process as `fastqc_results` using the `emit:` option. We can then reference the output as
-`FASTQC.out.fastqc_results` in the workflow scope.
+For example in the script below we name the output from the `calculate_statistic` process as `stat` using the `emit:` option. We can then reference the output as
+`calculate_statistic.out.stat` in the workflow scope.
 
 ```groovy 
 //workflow_02.nf
 
 
- process FASTQC {
+ process calculate_statistic {
+    publishDir "${params.output_dir}/stats", mode: "copy"
+    tag "${data.getSimpleName()}-${which_stat}"
+
     input:
-      tuple val(sample_id), path(reads)
+    tuple val(which_stat), path(data)
+
     output:
-      path "fastqc_${sample_id}_logs", emit: fastqc_results
+    tuple val(which_stat), path("*_${which_stat}.txt"), emit: "stat"
+
     script:
-      """
-      mkdir fastqc_${sample_id}_logs
-      fastqc -o fastqc_${sample_id}_logs ${reads}
-      """
+    
+    fn = data.name
+
+    """
+    calc_stats.py --${which_stat} ${data} > ${fn}_${which_stat}.txt
+    """
+
 }
 
-process MULTIQC {
-    publishDir "results/mqc"
+
+process collate_statistic {
+    publishDir "${params.output_dir}/collated", mode: "copy"
+    tag "${which_stat}"
+
     input:
-      path fastqc_results
+    tuple val(which_stat), path(data)
+
     output:
-      path "*"
+    tuple val(which_stat), path("*.collated.txt")
+
     script:
-      """
-      multiqc .
-      """
+    
+    """
+    ls ${data} | cut -f 1 -d . | tr "\\n" "\\t" | sed "s/\$/\\n/" > ${which_stat}.collated.txt
+    paste ${data} >> ${which_stat}.collated.txt
+    """
+
+
 }
 
 workflow {
-    read_pairs_ch = channel.fromFilePairs('data/yeast/reads/ref*_{1,2}.fq.gz',checkIfExists: true)
+    which_stat_ch = Channel.of(params.which_stat.split(","))
+        .filter { it == "max" || it == "min" || it == "mean" }
     
-    //FASTQC process takes 1 input channel as a argument
-    FASTQC(read_pairs_ch)
+    input_ch = Channel.fromPath(params.input_data)
+    
+    calculations_ch = which_stat_ch.combine(input_ch)
+    
+    stats_ch = calculate_statistic(calculations_ch).stat
+    
+    collate_input_ch = stats_ch.groupTuple(by: 0)
+    
+    collated_ch = collate_statistic(collate_input_ch)
+}
 
-    //MULTIQC channel takes 1 input channels as arguments
-    MULTIQC(FASTQC.out.fastqc_results.collect()).view()
+workflow.onComplete {
+    log.info ( workflow.success ? "\nDone! Your results are in ${params.output_dir}/collated\n" : "Oops .. something went wrong" )
 }
 ```
 
@@ -174,130 +227,27 @@ For example:
 //workflow_03.nf
 [..truncated..]
 
-params.reads = 'data/yeast/reads/*_{1,2}.fq.gz'
+params.which_stat = 'mean'
 
 workflow {
-
-  reads_ch_ = channel.fromFilePairs(params.reads)
-  FASTQC(reads_ch_)
-  MULTIQC(FASTQC.out.fastqc_results.collect()).view()
+    which_stat_ch = Channel.of(params.which_stat.split(","))
+        .filter { it == "max" || it == "min" || it == "mean" }
+    
+    input_ch = Channel.fromPath(params.input_data)
+    
+    calculations_ch = which_stat_ch.combine(input_ch)
+    
+    stats_ch = calculate_statistic(calculations_ch).stat
+    
+    collate_input_ch = stats_ch.groupTuple(by: 0)
+    
+    collated_ch = collate_statistic(collate_input_ch)
 }
+
 ```
 
-In this example `params.reads`, defined outside the workflow scope, can be accessed inside the `workflow` scope.
+In this example `params.which_stat`, defined outside the workflow scope, can be accessed inside the `workflow` scope.
 
-:::::::::::::::::::::::::::::::::::::::  challenge
-
-## Workflow
-
-Connect the output of the process `FASTQC` to `PARSEZIP` in the Nextflow script `workflow_exercise.nf`.
-
-**Note:** You will need to pass the `read_pairs_ch` as an argument to FASTQC and you will need to use the `collect` operator to gather the items in the FASTQC channel output to a single List item.
-
-```groovy 
-//workflow_exercise.nf
-
-params.reads = 'data/yeast/reads/*_{1,2}.fq.gz'
-
-process FASTQC {
- input:
- tuple val(sample_id), path(reads)
-
- output:
- path "fastqc_${sample_id}_logs/*.zip"
-
- script:
- """
- mkdir fastqc_${sample_id}_logs
- fastqc -o fastqc_${sample_id}_logs  ${reads}
- """
-}
-
-process PARSEZIP {
- publishDir "results/fqpass", mode:"copy"
- input:
- path fastqc_logs
-
- output:
- path 'pass_basic.txt'
-
- script:
- """
- for zip in *.zip; do zipgrep 'Basic Statistics' \$zip|grep 'summary.txt'; done > pass_basic.txt
- """
-}
-read_pairs_ch = channel.fromFilePairs(params.reads,checkIfExists: true)
-
-workflow {
-//connect process FASTQC and PARSEZIP
-// remember to use the collect operator on the FASTQC output
-}
-```
-
-:::::::::::::::  solution
-
-## Solution
-
-```groovy 
-//workflow_exercise.nf
-
-
-
-params.reads = 'data/yeast/reads/*_{1,2}.fq.gz'
-
-process FASTQC {
-  input:
-  tuple val(sample_id), path(reads)
-
-  output:
-  path "fastqc_${sample_id}_logs/*.zip"
-
-  script:
-  """
-  mkdir fastqc_${sample_id}_logs
-  fastqc -o fastqc_${sample_id}_logs  ${reads}
-  """
-}
-
-process PARSEZIP {
-  publishDir "results/fqpass", mode:"copy"
-  input:
-  path fastqc_logs
-
-  output:
-  path 'pass_basic.txt'
-
-  script:
-  """
-  for zip in *.zip; do zipgrep 'Basic Statistics' \$zip|grep 'summary.txt'; done > pass_basic.txt
-  """
-}
-
-read_pairs_ch = channel.fromFilePairs(params.reads,checkIfExists: true)
-
-workflow {
-  PARSEZIP(FASTQC(read_pairs_ch).collect())
-}
-```
-
-```bash 
-$ nextflow run workflow_exercise.nf
-```
-
-```bash 
-$ wc -l  results/fqpass/pass_basic.txt
-```
-
-```output 
-18
-```
-
-The file `results/fqpass/pass_basic.txt` should have 18 lines.
-If you only have two lines it might mean that you did not use `collect()` operator on the FASTC output channel.
-
-
-
-:::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -306,7 +256,7 @@ If you only have two lines it might mean that you did not use `collect()` operat
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
 - A Nextflow workflow is defined by invoking `processes` inside the `workflow` scope.
-- A process is invoked like a function inside the `workflow` scope passing any required input parameters as arguments. e.g. `FASTQC(reads_ch)`.
+- A process is invoked like a function inside the `workflow` scope passing any required input parameters as arguments. e.g. `calculate_statistic(calculations_ch)`.
 - Process outputs can be accessed using the `out` attribute for the respective `process` object or assigning the output to a Nextflow variable. 
 - Multiple outputs from a single process can be accessed using the list syntax `[]` and it's index or by referencing the a named process output .
 
