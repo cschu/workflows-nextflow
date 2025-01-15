@@ -110,9 +110,6 @@ workflow {
     collated_ch = collate_statistic(collate_input_ch)
 }
 
-workflow.onComplete {
-    log.info ( workflow.success ? "\nDone! Your results are in ${params.output_dir}/collated\n" : "Oops .. something went wrong" )
-}
 ```
 
 ### Process outputs
@@ -139,6 +136,7 @@ workflow {
     // process output accessed using the `out` attribute of the process object
     collated_ch = collate_statistic(calculate_statistic.out.groupTuple(by: 0))
 }
+
 ```
 
 When a process defines two or more output channels, each of them can be accessed using the list element operator e.g. `out[0]`, `out[1]`, or using named outputs.
@@ -212,9 +210,6 @@ workflow {
     collated_ch = collate_statistic(collate_input_ch)
 }
 
-workflow.onComplete {
-    log.info ( workflow.success ? "\nDone! Your results are in ${params.output_dir}/collated\n" : "Oops .. something went wrong" )
-}
 ```
 
 ### Accessing script parameters
