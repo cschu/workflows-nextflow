@@ -67,8 +67,8 @@ episodes:
 - 06-operators.md
 - 07-workflow.md
 - 08-reporting.md
-- 09-configuration.md
-- 10-workflow_checkpoint_caching.md
+- 09-workflow_checkpoint_caching.md
+- 10-configuration.md
 - 11-Simple_Rna-Seq_pipeline.md
 - 12-nfcore.md
 
