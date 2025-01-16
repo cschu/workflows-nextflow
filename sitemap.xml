@@ -34,6 +34,12 @@
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/09-configuration.html</loc>
   </url>
   <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/09-workflow_checkpoint_caching.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/10-configuration.html</loc>
+  </url>
+  <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/10-workflow_checkpoint_caching.html</loc>
   </url>
   <url>
@@ -95,6 +101,12 @@
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/09-configuration.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/09-workflow_checkpoint_caching.html</loc>
+  </url>
+  <url>
+    <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/10-configuration.html</loc>
   </url>
   <url>
     <loc>https://carpentries-incubator.github.io/workflows-nextflow/instructor/10-workflow_checkpoint_caching.html</loc>
