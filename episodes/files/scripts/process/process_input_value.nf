@@ -4,7 +4,7 @@
 process PRINTCHR {
 
   input:
-  val chr
+  val(chr)
 
   script:
   """

@@ -5,10 +5,10 @@ params.transcriptome="${projectDir}/data/yeast/transcriptome/Saccharomyces_cerev
 
 process COUNT_CHR_SEQS {
   input:
-  val chr
+  val(chr)
 
   output:
-  path "${chr}_seq_count.txt"
+  path("${chr}_seq_count.txt")
 
   script:
   """

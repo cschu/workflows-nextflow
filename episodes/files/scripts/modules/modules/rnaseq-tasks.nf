@@ -10,7 +10,7 @@ process INDEX {
     path transcriptome
 
     output:
-    path 'index'
+    path('index')
 
     script:
     """
@@ -25,7 +25,7 @@ process INDEX {
 process QUANT {
 
     input:
-    path index
+    path(index)
     tuple val(pair_id), path(reads)
 
     output:

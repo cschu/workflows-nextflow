@@ -5,14 +5,14 @@ params.transcriptome="${projectDir}/data/yeast/transcriptome/Saccharomyces_cerev
 
 process SPLIT_FASTA {
   input:
-  path transcriptome
+  path(transcriptome)
 
   output:
-  path "*"
+  path("*")
 
   script:
   """
-  zgrep  '^>' $transcriptome > sequence_ids.txt
+  zgrep '^>' $transcriptome > sequence_ids.txt
   zgrep -v '^>' $transcriptome > sequence.txt
   """
 }

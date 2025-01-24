@@ -38,7 +38,7 @@ workflow {
 process NUM_LINES {
 
     input:
-    path read
+    path(read)
 
     output:
     stdout

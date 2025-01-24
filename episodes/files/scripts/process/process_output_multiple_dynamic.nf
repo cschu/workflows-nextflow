@@ -3,10 +3,10 @@ bam_ch = Channel.fromPath("data/yeast/bams/*.bam")
 process index {
 
     input:
-    path bam from bam_ch
+    path(bam) from bam_ch
 
     output:
-    path "${bam}*" into index_out_ch
+    path("${bam}*") into index_out_ch
 
     script:
     """

@@ -3,12 +3,12 @@ nextflow.enable.dsl = 2
 process NUMLINES {
 
     input:
-    path read
+    path(reads)
 
     script:
     """
-    printf '${read} '
-    gunzip -c ${read} | wc -l
+    printf '${reads} '
+    gunzip -c ${reads} | wc -l
     """
 }
 

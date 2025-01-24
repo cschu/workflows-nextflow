@@ -3,10 +3,10 @@ nextflow.enable.dsl = 2
 process METHOD {
 
     input:
-    val x
+    val(x)
 
     output:
-    path 'method.txt'
+    path('method.txt')
 
     """
     echo $x > method.txt

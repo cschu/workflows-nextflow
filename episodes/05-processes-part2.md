@@ -57,10 +57,10 @@ params.transcriptome="${projectDir}/data/yeast/transcriptome/Saccharomyces_cerev
 
 process COUNT_CHR_SEQS {
   input:
-  val chr
+  val(chr)
 
   output:
-  val chr
+  val(chr)
 
   script:
   """
@@ -110,10 +110,10 @@ params.transcriptome="${projectDir}/data/yeast/transcriptome/Saccharomyces_cerev
 
 process COUNT_CHR_SEQS {
   input:
-  val chr
+  val(chr)
 
   output:
-  path "${chr}_seq_count.txt"
+  path("${chr}_seq_count.txt")
 
   script:
   """
@@ -166,10 +166,10 @@ params.transcriptome="${projectDir}/data/yeast/transcriptome/Saccharomyces_cerev
 
 process SPLIT_FASTA {
   input:
-  path transcriptome
+  path(transcriptome)
 
   output:
-  path "*"
+  path("*")
 
   script:
   """
@@ -219,8 +219,8 @@ Modify the nextflow script `process_exercise_output.nf` to include an output blo
 
 process EXTRACT_IDS {
   input:
-  path transcriptome
-  each chr
+  path(transcriptome)
+  each(chr)
 
   //add output block here to capture the file "${chr}_seqids.txt"
 
@@ -249,12 +249,12 @@ workflow {
 
 process EXTRACT_IDS {
   input:
-  path transcriptome
-  each chr
+  path(transcriptome)
+  each(chr)
 
   //add output block here to capture the file "${chr}_seqids.txt"
   output:
-  path "${chr}_seqids.txt"
+  path("${chr}_seqids.txt")
 
   script:
   """
@@ -455,7 +455,7 @@ In the example below the process `CONDITIONAL` will only execute when the value 
 
 process CONDITIONAL {
   input:
-  val chr
+  val(chr)
 
   when:
   chr <= 5
@@ -507,7 +507,7 @@ process PRINTCHR {
   echo true
 
   input:
-  val chr
+  val(chr)
 
   script:
   """
@@ -750,10 +750,10 @@ process SPLIT_FASTA {
 
 
   input:
-  path transcriptome
+  path(transcriptome)
 
   output:
-  path "*"
+  path("*")
 
   script:
   """

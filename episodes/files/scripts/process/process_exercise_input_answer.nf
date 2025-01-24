@@ -5,7 +5,7 @@ params.transcriptome = "${projectDir}/data/yeast/transcriptome/Saccharomyces_cer
 
 process CHR_COUNT {
  input:
- path transcriptome
+ path(transcriptome)
 
  script:
  """
