@@ -701,7 +701,7 @@ The `val` qualifier allows you to receive value data as input. It can be accesse
 process PRINTCHR {
 
   input:
-  val chr
+  val(chr)
 
   script:
   """
@@ -757,12 +757,12 @@ For example, in the script below, we assign the variable name `read` to the inpu
 
 process NUMLINES {
     input:
-    path read
+    path(reads)
 
     script:
     """
-    printf '${read} '
-    gunzip -c ${read} | wc -l
+    printf '${reads} '
+    gunzip -c ${reads} | wc -l
     """
 }
 
@@ -803,7 +803,7 @@ For example, in the script below, the name of the file is specified as `'sample.
 
 process NUMLINES {
     input:
-    path 'sample.fq.gz'
+    path('sample.fq.gz')
 
     script:
     """
@@ -892,7 +892,7 @@ nextflow run process_exercise_input.nf -process.debug
 
  process CHR_COUNT {
   input:
-  path transcriptome
+  path(transcriptome)
 
   script:
   """
@@ -934,8 +934,8 @@ Consider the following example:
 
 process COMBINE {
   input:
-  val x
-  val y
+  val(x)
+  val(y)
 
   script:
   """
@@ -979,8 +979,8 @@ For example:
 
 process COMBINE {
   input:
-  val x
-  val y
+  val(x)
+  val(y)
 
   script:
   """
@@ -1020,8 +1020,8 @@ To better understand this behaviour compare the previous example with the follow
 
 process COMBINE {
   input:
-  val x
-  val y
+  val(x)
+  val(y)
 
   script:
   """
@@ -1075,7 +1075,7 @@ And include the command below in the script directive
  process COMBINE {
   input:
   path transcriptome
-  val chr
+  val(chr)
 
   script:
   """
@@ -1121,8 +1121,8 @@ For example if we can fix the previous example by using the input qualifer `each
 
 process COMBINE {
   input:
-  val x
-  each y
+  val(x)
+  each(y)
 
   script:
   """
@@ -1166,8 +1166,8 @@ Extend the script `process_exercise_repeat.nf` by adding more values to the `chr
 
 process COMBINE {
     input:
-    path transcriptome
-    val chr
+    path(transcriptome)
+    val(chr)
    
     script:
     """
@@ -1196,8 +1196,8 @@ How many times does this process run?
 
  process COMBINE {
    input:
-   path transcriptome
-   each chr
+   path(transcriptome)
+   each(chr)
   
    script:
    """

@@ -10,7 +10,7 @@ process PRINT_MESSAGE {
     echo true
 
     input:
-    val my_message
+    val(my_message)
 
     script:
     """

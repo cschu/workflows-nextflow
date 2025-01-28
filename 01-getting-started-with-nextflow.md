@@ -206,25 +206,24 @@ input_ch = Channel.fromPath(params.input)
 workflow {
     //  The script to execute is called by it's process name, and input is provided between brackets.
 
-    NUM_LINES(input_ch)
+    count_lines(input_ch)
 
     /*  Process output is accessed using the `out` channel.
         The channel operator view() is used to print process output to the terminal. */
 
-    NUM_LINES.out.view()
+    count_lines.out.view()
 
 }
 
 /*
 ========================================================================================
-    A Nextflow process block. Process names are written, by convention, in uppercase.
-    This convention is used to enhance workflow readability.
+    A Nextflow process block.
 ========================================================================================
 */
-process NUM_LINES {
+process count_lines {
 
     input:
-    path read
+    path(reads)
 
     output:
     stdout
@@ -232,10 +231,10 @@ process NUM_LINES {
     script:
     """
     # Print file name
-    printf '${read}\\t'
+    echo ${reads}
 
     # Unzip file and count number of lines
-    gunzip -c ${read} | wc -l
+    gunzip -c ${reads} | wc -l
     """
 }
 ```
@@ -250,9 +249,9 @@ This is a Nextflow script, which contains the following:
 6. A call to the process `NUM_LINES`.
 7. An operation on the process output, using the channel operator `.view()`.
 8. A Nextflow process block named `NUM_LINES`, which defines what the process does.
-9. An `input` definition block that assigns the `input` to the variable `read`, and declares that it should be interpreted as a file path.
+9. An `input` definition block that assigns the `input` to the variable `reads`, and declares that it should be interpreted as a file path.
 10. An `output` definition block that uses the Linux/Unix standard output stream `stdout` from the script block.
-11. A script block that contains the bash commands `printf '${read}'` and `gunzip -c ${read} | wc -l`.
+11. A script block that contains the bash commands `printf '${reads}'` and `gunzip -c ${reads} | wc -l`.
 
 ## Running Nextflow scripts
 

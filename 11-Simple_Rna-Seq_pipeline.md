@@ -227,10 +227,10 @@ println """\
 process INDEX {
 
     input:
-    path transcriptome
+    path(transcriptome)
 
     output:
-    path 'index'
+    path('index')
 
     script:
     """

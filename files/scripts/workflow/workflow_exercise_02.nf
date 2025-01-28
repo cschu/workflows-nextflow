@@ -5,10 +5,10 @@ params.bam = 'data/yeast/bams/*.bam'
 process FLAGSTAT {
 
     input:
-    path bam
+    path(bam)
 
     output:
-    path "${bam}.flagstats.txt"
+    path("${bam}.flagstats.txt")
 
     script:
     //flagstat simple stats on bam file
@@ -22,10 +22,10 @@ process MERGEFLAGSTAT {
     publishDir "results/flagstats", mode:"copy"
 
     input:
-    path flagstats
+    path(flagstats)
 
     output:
-    path 'flagstats.txt'
+    path('flagstats.txt')
 
     script:
     """

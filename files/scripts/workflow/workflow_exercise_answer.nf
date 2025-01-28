@@ -7,7 +7,7 @@ process FASTQC {
     tuple val(sample_id), path(reads)
 
     output:
-    path "fastqc_${sample_id}_logs/*.zip"
+    path("fastqc_${sample_id}_logs/*.zip")
 
     script:
     //flagstat simple stats on bam file
@@ -22,10 +22,10 @@ process PARSEZIP {
     publishDir "results/fqpass", mode:"copy"
 
     input:
-    path flagstats
+    path(flagstats)
 
     output:
-    path 'pass_basic.txt'
+    path('pass_basic.txt')
 
     script:
     """

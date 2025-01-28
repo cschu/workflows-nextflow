@@ -23,10 +23,10 @@ log.info """\
 process INDEX {
 
     input:
-    path transcriptome
+    path(transcriptome)
 
     output:
-    path 'index'
+    path('index')
 
     script:
     """
@@ -43,7 +43,7 @@ process QUANT {
     publishDir params.outdir, mode:'copy'
 
     input:
-    each index
+    each(index)
     tuple val(pair_id), path(reads)
 
     output:

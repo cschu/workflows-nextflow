@@ -3,8 +3,8 @@
 
 process EXTRACT_IDS {
   input:
-  path transcriptome
-  each chr
+  path(transcriptome)
+  each(chr)
 
   //add output block here to capture the file "${chr}_seqids.txt"
 

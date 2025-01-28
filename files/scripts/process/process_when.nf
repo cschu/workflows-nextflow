@@ -3,7 +3,7 @@ nextflow.enable.dsl = 2
 process CONDITIONAL {
 
     input:
-    val chr
+    val(chr)
 
     when:
     chr <= 5
