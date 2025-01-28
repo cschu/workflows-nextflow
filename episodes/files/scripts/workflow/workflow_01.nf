@@ -17,9 +17,9 @@
 process MULTIQC {
     publishDir "results/mqc"
     input:
-      path transcriptome
+      path(transcriptome)
     output:
-      path "*"
+      path("*")
     script:
       """
       multiqc .

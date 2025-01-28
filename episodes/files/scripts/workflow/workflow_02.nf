@@ -6,7 +6,7 @@ process INDEX {
     path transcriptome
 
     output:
-    path 'index', emit: salmon_index
+    path('index'), emit: salmon_index
 
     script:
     """

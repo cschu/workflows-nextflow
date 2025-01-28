@@ -7,7 +7,7 @@ process PRINTCHR {
     echo true
 
     input:
-    val chr
+    val(chr)
 
     script:
     """

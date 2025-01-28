@@ -10,14 +10,14 @@ workflow {
 process FASTP {
 
    input:
-   path read
+   path(reads)
 
    output:
    stdout
 
    script:
    """
-   fastp -A -i ${read} -o out.fq 2>&1
+   fastp -A -i ${reads} -o out.fq 2>&1
    """
 }
 

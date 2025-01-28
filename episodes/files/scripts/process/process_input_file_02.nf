@@ -3,7 +3,7 @@ nextflow.enable.dsl = 2
 process NUMLINES {
 
     input:
-    path 'sample.fq.gz'
+    path('sample.fq.gz')
 
     script:
     """

@@ -2,13 +2,13 @@
  
  process COMBINE {
    input:
-   path transcriptome
-   val chr
+   path(transcriptome)
+   val(chr)
   
    script:
    """
      printf "Number of sequences for chromosome $chr: "
-   zgrep -c "^>Y${chr}" ${transcriptome}
+     zgrep -c "^>Y${chr}" ${transcriptome}
    """
  }
 
