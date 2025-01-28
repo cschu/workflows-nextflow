@@ -3,10 +3,10 @@ nextflow.enable.dsl = 2
 process INDEX {
 
     input:
-    path transcriptome
+    path(transcriptome)
 
     output:
-    path 'index', emit: salmon_index
+    path('index'), emit: salmon_index
 
     script:
     """
@@ -21,7 +21,7 @@ process QUANT {
     tuple( val(pair_id), path(reads) )
 
     output:
-    path pair_id
+    path(pair_id)
 
     script:
     """

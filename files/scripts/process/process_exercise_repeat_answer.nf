@@ -3,8 +3,8 @@
 
 process COMBINE {
   input:
-  path transcriptome
-  each chr
+  path(transcriptome)
+  each(chr)
  
   script:
   """

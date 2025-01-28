@@ -3,8 +3,8 @@ nextflow.enable.dsl = 2
 process COMBINE {
 
     input:
-    val x
-    each y
+    val(x)
+    each(y)
 
     script:
     """

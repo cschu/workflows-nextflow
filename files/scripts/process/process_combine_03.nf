@@ -5,8 +5,8 @@ process COMBINE {
     echo true
 
     input:
-    val x
-    val y
+    val(x)
+    val(y)
 
     script:
     """

@@ -9,10 +9,10 @@ process SPLIT_FASTA {
 
 
   input:
-  path transcriptome
+  path(transcriptome)
 
   output:
-  path "*"
+  path("*")
 
   script:
   """

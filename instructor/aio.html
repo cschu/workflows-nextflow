@@ -446,7 +446,7 @@
         
 <section id="aio-01-getting-started-with-nextflow"><p>Content from <a href="01-getting-started-with-nextflow.html">Getting Started with Nextflow</a></p>
 <hr>
-<p>Last updated on 2025-01-06 |
+<p>Last updated on 2025-01-28 |
 
         <a href="https://github.com/carpentries-incubator/workflows-nextflow/edit/main/episodes/01-getting-started-with-nextflow.md" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
 <p>Estimated time: <i aria-hidden="true" data-feather="clock"></i> 40 minutes</p>
@@ -622,7 +622,7 @@ the following code:</p>
 <button class="accordion-button instructor-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInstructor1" aria-expanded="false" aria-controls="collapseInstructor1">
   <h3 class="accordion-header" id="headingInstructor1">  <div class="note-square"><i aria-hidden="true" class="callout-icon" data-feather="edit-2"></i></div> Instructor Note </h3>
 </button>
-<div id="collapseInstructor1" class="accordion-collapse collapse" data-bs-parent="#accordionInstructor1" aria-labelledby="headingInstructor1">
+<div id="collapseInstructor1" class="accordion-collapse collapse" aria-labelledby="headingInstructor1" data-bs-parent="#accordionInstructor1">
 <div class="accordion-body">
 <p>The nextflow scripts for each lesson episode are available in the
 <code>scripts</code> directory created during the course setup. You
@@ -671,38 +671,37 @@ following command:</p>
 <span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a>workflow <span class="op">{</span></span>
 <span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a>    <span class="co">//  The script to execute is called by it's process name, and input is provided between brackets.</span></span>
 <span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>    <span class="fu">NUM_LINES</span><span class="op">(</span>input_ch<span class="op">)</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>    <span class="fu">count_lines</span><span class="op">(</span>input_ch<span class="op">)</span></span>
 <span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a></span>
 <span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>    <span class="st">/*  Process output is accessed using the `out` channel.</span></span>
 <span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="st">        The channel operator view() is used to print process output to the terminal. */</span></span>
 <span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>    NUM_LINES<span class="op">.</span>out<span class="op">.</span><span class="fu">view</span><span class="op">()</span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>    count_lines<span class="op">.</span>out<span class="op">.</span><span class="fu">view</span><span class="op">()</span></span>
 <span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a></span>
 <span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a></span>
 <span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="st">/*</span></span>
 <span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="st">========================================================================================</span></span>
-<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="st">    A Nextflow process block. Process names are written, by convention, in uppercase.</span></span>
-<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="st">    This convention is used to enhance workflow readability.</span></span>
-<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="st">========================================================================================</span></span>
-<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="st">*/</span></span>
-<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a>process NUM_LINES <span class="op">{</span></span>
-<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a>    path read</span>
-<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a></span>
-<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a>    output<span class="op">:</span></span>
-<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a>    stdout</span>
-<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>    script<span class="op">:</span></span>
-<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="st">    # Print file name</span></span>
-<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a><span class="st">    printf '</span><span class="ss">${</span>read<span class="ss">}</span><span class="sc">\\</span><span class="st">t'</span></span>
-<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="st">    # Unzip file and count number of lines</span></span>
-<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a><span class="st">    gunzip -c </span><span class="ss">${</span>read<span class="ss">}</span><span class="st"> | wc -l</span></span>
-<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a><span class="op">}</span></span></code></pre>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="st">    A Nextflow process block.</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="st">========================================================================================</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="st">*/</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a>process count_lines <span class="op">{</span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a>    <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a>    stdout</span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a>    script<span class="op">:</span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="st">    # Print file name</span></span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="st">    echo </span><span class="ss">${</span>reads<span class="ss">}</span></span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a><span class="st">    # Unzip file and count number of lines</span></span>
+<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="st">    gunzip -c </span><span class="ss">${</span>reads<span class="ss">}</span><span class="st"> | wc -l</span></span>
+<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a><span class="op">}</span></span></code></pre>
 </div>
 <p>This is a Nextflow script, which contains the following:</p>
 <ol style="list-style-type: decimal">
@@ -723,13 +722,13 @@ default workflow to run.</li>
 <li>A Nextflow process block named <code>NUM_LINES</code>, which defines
 what the process does.</li>
 <li>An <code>input</code> definition block that assigns the
-<code>input</code> to the variable <code>read</code>, and declares that
+<code>input</code> to the variable <code>reads</code>, and declares that
 it should be interpreted as a file path.</li>
 <li>An <code>output</code> definition block that uses the Linux/Unix
 standard output stream <code>stdout</code> from the script block.</li>
 <li>A script block that contains the bash commands
-<code>printf '${read}'</code> and
-<code>gunzip -c ${read} | wc -l</code>.</li>
+<code>printf '${reads}'</code> and
+<code>gunzip -c ${reads} | wc -l</code>.</li>
 </ol></section><section><h2 class="section-heading" id="running-nextflow-scripts">Running Nextflow scripts<a class="anchor" aria-label="anchor" href="#running-nextflow-scripts"></a>
 </h2>
 <hr class="half-width">
@@ -757,7 +756,7 @@ terminal:</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <p>You should see output similar to the text shown below:</p>
 <div class="codewrapper">
@@ -1309,7 +1308,7 @@ than one process.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <ol style="list-style-type: decimal">
 <li>A queue channels is used to store multiple values.</li>
@@ -1326,7 +1325,7 @@ with multiple values.</li>
 <button class="accordion-button instructor-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInstructor1" aria-expanded="false" aria-controls="collapseInstructor1">
   <h3 class="accordion-header" id="headingInstructor1">  <div class="note-square"><i aria-hidden="true" class="callout-icon" data-feather="edit-2"></i></div> Instructor Note </h3>
 </button>
-<div id="collapseInstructor1" class="accordion-collapse collapse" data-bs-parent="#accordionInstructor1" aria-labelledby="headingInstructor1">
+<div id="collapseInstructor1" class="accordion-collapse collapse" aria-labelledby="headingInstructor1" data-bs-parent="#accordionInstructor1">
 <div class="accordion-body">
 <p>Create a nextflow script called to <code>channel.nf</code> for the
 following examples. Explain that as you are just setting up channels you
@@ -1510,7 +1509,7 @@ contents of the channels.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb10">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -1597,7 +1596,7 @@ operator. How many lines does the queue and value channel print?</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb15">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -1803,7 +1802,7 @@ to search subdirectories.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
   <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
 </button>
-<div id="collapseSolution4" class="accordion-collapse collapse" data-bs-parent="#accordionSolution4" aria-labelledby="headingSolution4">
+<div id="collapseSolution4" class="accordion-collapse collapse" aria-labelledby="headingSolution4" data-bs-parent="#accordionSolution4">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb25">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -2007,7 +2006,7 @@ directory</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution5" aria-expanded="false" aria-controls="collapseSolution5">
   <h4 class="accordion-header" id="headingSolution5"> Show me the solution </h4>
 </button>
-<div id="collapseSolution5" class="accordion-collapse collapse" data-bs-parent="#accordionSolution5" aria-labelledby="headingSolution5">
+<div id="collapseSolution5" class="accordion-collapse collapse" aria-labelledby="headingSolution5" data-bs-parent="#accordionSolution5">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb31">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -2054,7 +2053,7 @@ behaviour of a channel.</li>
 </div>
 </section></section><section id="aio-04-processes-part1"><p>Content from <a href="04-processes-part1.html">Processes</a></p>
 <hr>
-<p>Last updated on 2025-01-06 |
+<p>Last updated on 2025-01-28 |
 
         <a href="https://github.com/carpentries-incubator/workflows-nextflow/edit/main/episodes/04-processes-part1.md" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
 <p>Estimated time: <i aria-hidden="true" data-feather="clock"></i> 45 minutes</p>
@@ -2250,7 +2249,7 @@ process <code>COUNT_BASES</code> that runs the command.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb9">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -2400,7 +2399,7 @@ executor &gt;  local (1)
 <button class="accordion-button instructor-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInstructor1" aria-expanded="false" aria-controls="collapseInstructor1">
   <h3 class="accordion-header" id="headingInstructor1">  <div class="note-square"><i aria-hidden="true" class="callout-icon" data-feather="edit-2"></i></div> Instructor Note </h3>
 </button>
-<div id="collapseInstructor1" class="accordion-collapse collapse" aria-labelledby="headingInstructor1" data-bs-parent="#accordionInstructor1">
+<div id="collapseInstructor1" class="accordion-collapse collapse" data-bs-parent="#accordionInstructor1" aria-labelledby="headingInstructor1">
 <div class="accordion-body">
 <p>The following section on python is meant to be run by the instructor
 not the learners. It is meant to be a demonstration of the different
@@ -2706,7 +2705,7 @@ terminal.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb31">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -2965,7 +2964,7 @@ input name, as shown in the following example:</p>
 <span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>process PRINTCHR <span class="op">{</span></span>
 <span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a></span>
 <span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a>  val chr</span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a></span>
 <span id="cb41-9"><a href="#cb41-9" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb41-10"><a href="#cb41-10" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3038,12 +3037,12 @@ qualifier. The file is referenced using the variable substitution syntax
 <span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a></span>
 <span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a>process NUMLINES <span class="op">{</span></span>
 <span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a>    path read</span>
+<span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a>    <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
 <span id="cb44-7"><a href="#cb44-7" tabindex="-1"></a></span>
 <span id="cb44-8"><a href="#cb44-8" tabindex="-1"></a>    script<span class="op">:</span></span>
 <span id="cb44-9"><a href="#cb44-9" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb44-10"><a href="#cb44-10" tabindex="-1"></a><span class="st">    printf '</span><span class="ss">${</span>read<span class="ss">}</span><span class="st"> '</span></span>
-<span id="cb44-11"><a href="#cb44-11" tabindex="-1"></a><span class="st">    gunzip -c </span><span class="ss">${</span>read<span class="ss">}</span><span class="st"> | wc -l</span></span>
+<span id="cb44-10"><a href="#cb44-10" tabindex="-1"></a><span class="st">    printf '</span><span class="ss">${</span>reads<span class="ss">}</span><span class="st"> '</span></span>
+<span id="cb44-11"><a href="#cb44-11" tabindex="-1"></a><span class="st">    gunzip -c </span><span class="ss">${</span>reads<span class="ss">}</span><span class="st"> | wc -l</span></span>
 <span id="cb44-12"><a href="#cb44-12" tabindex="-1"></a><span class="st">    """</span></span>
 <span id="cb44-13"><a href="#cb44-13" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb44-14"><a href="#cb44-14" tabindex="-1"></a></span>
@@ -3093,7 +3092,7 @@ be referenced by that name in the script block.</p>
 <span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a></span>
 <span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a>process NUMLINES <span class="op">{</span></span>
 <span id="cb47-5"><a href="#cb47-5" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb47-6"><a href="#cb47-6" tabindex="-1"></a>    path <span class="st">'sample.fq.gz'</span></span>
+<span id="cb47-6"><a href="#cb47-6" tabindex="-1"></a>    <span class="fu">path</span><span class="op">(</span><span class="st">'sample.fq.gz'</span><span class="op">)</span></span>
 <span id="cb47-7"><a href="#cb47-7" tabindex="-1"></a></span>
 <span id="cb47-8"><a href="#cb47-8" tabindex="-1"></a>    script<span class="op">:</span></span>
 <span id="cb47-9"><a href="#cb47-9" tabindex="-1"></a>    <span class="st">"""</span></span>
@@ -3200,7 +3199,7 @@ input.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb52">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -3212,7 +3211,7 @@ input.</li>
 <span id="cb52-5"><a href="#cb52-5" tabindex="-1"></a></span>
 <span id="cb52-6"><a href="#cb52-6" tabindex="-1"></a> process CHR_COUNT <span class="op">{</span></span>
 <span id="cb52-7"><a href="#cb52-7" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb52-8"><a href="#cb52-8" tabindex="-1"></a>  path transcriptome</span>
+<span id="cb52-8"><a href="#cb52-8" tabindex="-1"></a>  <span class="fu">path</span><span class="op">(</span>transcriptome<span class="op">)</span></span>
 <span id="cb52-9"><a href="#cb52-9" tabindex="-1"></a></span>
 <span id="cb52-10"><a href="#cb52-10" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb52-11"><a href="#cb52-11" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3257,8 +3256,8 @@ process.</p>
 <span id="cb54-3"><a href="#cb54-3" tabindex="-1"></a></span>
 <span id="cb54-4"><a href="#cb54-4" tabindex="-1"></a>process COMBINE <span class="op">{</span></span>
 <span id="cb54-5"><a href="#cb54-5" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb54-6"><a href="#cb54-6" tabindex="-1"></a>  val x</span>
-<span id="cb54-7"><a href="#cb54-7" tabindex="-1"></a>  val y</span>
+<span id="cb54-6"><a href="#cb54-6" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb54-7"><a href="#cb54-7" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>y<span class="op">)</span></span>
 <span id="cb54-8"><a href="#cb54-8" tabindex="-1"></a></span>
 <span id="cb54-9"><a href="#cb54-9" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb54-10"><a href="#cb54-10" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3306,8 +3305,8 @@ elements?</p>
 <span id="cb57-3"><a href="#cb57-3" tabindex="-1"></a></span>
 <span id="cb57-4"><a href="#cb57-4" tabindex="-1"></a>process COMBINE <span class="op">{</span></span>
 <span id="cb57-5"><a href="#cb57-5" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb57-6"><a href="#cb57-6" tabindex="-1"></a>  val x</span>
-<span id="cb57-7"><a href="#cb57-7" tabindex="-1"></a>  val y</span>
+<span id="cb57-6"><a href="#cb57-6" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb57-7"><a href="#cb57-7" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>y<span class="op">)</span></span>
 <span id="cb57-8"><a href="#cb57-8" tabindex="-1"></a></span>
 <span id="cb57-9"><a href="#cb57-9" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb57-10"><a href="#cb57-10" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3353,8 +3352,8 @@ the following one:</p>
 <span id="cb60-3"><a href="#cb60-3" tabindex="-1"></a></span>
 <span id="cb60-4"><a href="#cb60-4" tabindex="-1"></a>process COMBINE <span class="op">{</span></span>
 <span id="cb60-5"><a href="#cb60-5" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb60-6"><a href="#cb60-6" tabindex="-1"></a>  val x</span>
-<span id="cb60-7"><a href="#cb60-7" tabindex="-1"></a>  val y</span>
+<span id="cb60-6"><a href="#cb60-6" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb60-7"><a href="#cb60-7" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>y<span class="op">)</span></span>
 <span id="cb60-8"><a href="#cb60-8" tabindex="-1"></a></span>
 <span id="cb60-9"><a href="#cb60-9" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb60-10"><a href="#cb60-10" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3413,7 +3412,7 @@ combines two input channels</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
   <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
 </button>
-<div id="collapseSolution4" class="accordion-collapse collapse" aria-labelledby="headingSolution4" data-bs-parent="#accordionSolution4">
+<div id="collapseSolution4" class="accordion-collapse collapse" data-bs-parent="#accordionSolution4" aria-labelledby="headingSolution4">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb65">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -3423,7 +3422,7 @@ combines two input channels</p>
 <span id="cb65-3"><a href="#cb65-3" tabindex="-1"></a> process COMBINE <span class="op">{</span></span>
 <span id="cb65-4"><a href="#cb65-4" tabindex="-1"></a>  input<span class="op">:</span></span>
 <span id="cb65-5"><a href="#cb65-5" tabindex="-1"></a>  path transcriptome</span>
-<span id="cb65-6"><a href="#cb65-6" tabindex="-1"></a>  val chr</span>
+<span id="cb65-6"><a href="#cb65-6" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb65-7"><a href="#cb65-7" tabindex="-1"></a></span>
 <span id="cb65-8"><a href="#cb65-8" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb65-9"><a href="#cb65-9" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3477,8 +3476,8 @@ qualifer <code>each</code> for the letters queue channel:</p>
 <span id="cb68-3"><a href="#cb68-3" tabindex="-1"></a></span>
 <span id="cb68-4"><a href="#cb68-4" tabindex="-1"></a>process COMBINE <span class="op">{</span></span>
 <span id="cb68-5"><a href="#cb68-5" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb68-6"><a href="#cb68-6" tabindex="-1"></a>  val x</span>
-<span id="cb68-7"><a href="#cb68-7" tabindex="-1"></a>  each y</span>
+<span id="cb68-6"><a href="#cb68-6" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb68-7"><a href="#cb68-7" tabindex="-1"></a>  <span class="fu">each</span><span class="op">(</span>y<span class="op">)</span></span>
 <span id="cb68-8"><a href="#cb68-8" tabindex="-1"></a></span>
 <span id="cb68-9"><a href="#cb68-9" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb68-10"><a href="#cb68-10" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3528,8 +3527,8 @@ running the process for each value.</p>
 <span id="cb71-2"><a href="#cb71-2" tabindex="-1"></a></span>
 <span id="cb71-3"><a href="#cb71-3" tabindex="-1"></a>process COMBINE <span class="op">{</span></span>
 <span id="cb71-4"><a href="#cb71-4" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb71-5"><a href="#cb71-5" tabindex="-1"></a>    path transcriptome</span>
-<span id="cb71-6"><a href="#cb71-6" tabindex="-1"></a>    val chr</span>
+<span id="cb71-5"><a href="#cb71-5" tabindex="-1"></a>    <span class="fu">path</span><span class="op">(</span>transcriptome<span class="op">)</span></span>
+<span id="cb71-6"><a href="#cb71-6" tabindex="-1"></a>    <span class="fu">val</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb71-7"><a href="#cb71-7" tabindex="-1"></a>   </span>
 <span id="cb71-8"><a href="#cb71-8" tabindex="-1"></a>    script<span class="op">:</span></span>
 <span id="cb71-9"><a href="#cb71-9" tabindex="-1"></a>    <span class="st">"""</span></span>
@@ -3554,7 +3553,7 @@ running the process for each value.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution5" aria-expanded="false" aria-controls="collapseSolution5">
   <h4 class="accordion-header" id="headingSolution5"> Show me the solution </h4>
 </button>
-<div id="collapseSolution5" class="accordion-collapse collapse" aria-labelledby="headingSolution5" data-bs-parent="#accordionSolution5">
+<div id="collapseSolution5" class="accordion-collapse collapse" data-bs-parent="#accordionSolution5" aria-labelledby="headingSolution5">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb72">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -3564,8 +3563,8 @@ running the process for each value.</p>
 <span id="cb72-3"><a href="#cb72-3" tabindex="-1"></a></span>
 <span id="cb72-4"><a href="#cb72-4" tabindex="-1"></a> process COMBINE <span class="op">{</span></span>
 <span id="cb72-5"><a href="#cb72-5" tabindex="-1"></a>   input<span class="op">:</span></span>
-<span id="cb72-6"><a href="#cb72-6" tabindex="-1"></a>   path transcriptome</span>
-<span id="cb72-7"><a href="#cb72-7" tabindex="-1"></a>   each chr</span>
+<span id="cb72-6"><a href="#cb72-6" tabindex="-1"></a>   <span class="fu">path</span><span class="op">(</span>transcriptome<span class="op">)</span></span>
+<span id="cb72-7"><a href="#cb72-7" tabindex="-1"></a>   <span class="fu">each</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb72-8"><a href="#cb72-8" tabindex="-1"></a>  </span>
 <span id="cb72-9"><a href="#cb72-9" tabindex="-1"></a>   script<span class="op">:</span></span>
 <span id="cb72-10"><a href="#cb72-10" tabindex="-1"></a>   <span class="st">"""</span></span>
@@ -3672,7 +3671,7 @@ name.</li>
 </div>
 </section></section><section id="aio-05-processes-part2"><p>Content from <a href="05-processes-part2.html">Processes Part 2</a></p>
 <hr>
-<p>Last updated on 2025-01-06 |
+<p>Last updated on 2025-01-28 |
 
         <a href="https://github.com/carpentries-incubator/workflows-nextflow/edit/main/episodes/05-processes-part2.md" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
 <p>Estimated time: <i aria-hidden="true" data-feather="clock"></i> 40 minutes</p>
@@ -3756,10 +3755,10 @@ block as shown in the following example:</p>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>process COUNT_CHR_SEQS <span class="op">{</span></span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  val chr</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  output<span class="op">:</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>  val chr</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
 <span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3813,10 +3812,10 @@ produced by the process, over the specified channel.</p>
 <span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a></span>
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>process COUNT_CHR_SEQS <span class="op">{</span></span>
 <span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  val chr</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a></span>
 <span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  output<span class="op">:</span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  path <span class="st">"</span><span class="ss">${</span>chr<span class="ss">}</span><span class="st">_seq_count.txt"</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="fu">path</span><span class="op">(</span><span class="st">"</span><span class="ss">${</span>chr<span class="ss">}</span><span class="st">_seq_count.txt"</span><span class="op">)</span></span>
 <span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a></span>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3880,10 +3879,10 @@ results from SPLIT_FASTA in the output channel.</p>
 <span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a></span>
 <span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>process SPLIT_FASTA <span class="op">{</span></span>
 <span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  path transcriptome</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="fu">path</span><span class="op">(</span>transcriptome<span class="op">)</span></span>
 <span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a></span>
 <span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  output<span class="op">:</span></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  path <span class="st">"*"</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  <span class="fu">path</span><span class="op">(</span><span class="st">"*"</span><span class="op">)</span></span>
 <span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a></span>
 <span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -3943,8 +3942,8 @@ include an output block that captures the different output file
 <span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>process EXTRACT_IDS <span class="op">{</span></span>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  path transcriptome</span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  each chr</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="fu">path</span><span class="op">(</span>transcriptome<span class="op">)</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="fu">each</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a></span>
 <span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="co">//add output block here to capture the file "${chr}_seqids.txt"</span></span>
 <span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a></span>
@@ -3980,12 +3979,12 @@ include an output block that captures the different output file
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
 <span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>process EXTRACT_IDS <span class="op">{</span></span>
 <span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  path transcriptome</span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  each chr</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="fu">path</span><span class="op">(</span>transcriptome<span class="op">)</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="fu">each</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a></span>
 <span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>  <span class="co">//add output block here to capture the file "${chr}_seqids.txt"</span></span>
 <span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>  output<span class="op">:</span></span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>  path <span class="st">"</span><span class="ss">${</span>chr<span class="ss">}</span><span class="st">_seqids.txt"</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>  <span class="fu">path</span><span class="op">(</span><span class="st">"</span><span class="ss">${</span>chr<span class="ss">}</span><span class="st">_seqids.txt"</span><span class="op">)</span></span>
 <span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a></span>
 <span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -4212,7 +4211,7 @@ equal to 5:</p>
 <span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a></span>
 <span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>process CONDITIONAL <span class="op">{</span></span>
 <span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>  val chr</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a></span>
 <span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>  when<span class="op">:</span></span>
 <span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>  chr <span class="op">&lt;=</span> <span class="dv">5</span></span>
@@ -4270,7 +4269,7 @@ purpose.</p>
 <span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>  echo <span class="kw">true</span></span>
 <span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a></span>
 <span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a>  val chr</span>
+<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a>  <span class="fu">val</span><span class="op">(</span>chr<span class="op">)</span></span>
 <span id="cb23-11"><a href="#cb23-11" tabindex="-1"></a></span>
 <span id="cb23-12"><a href="#cb23-12" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb23-13"><a href="#cb23-13" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -4574,10 +4573,10 @@ Remember, we need to specify the files we want to copy as outputs.</p>
 <span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a></span>
 <span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a></span>
 <span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a>  input<span class="op">:</span></span>
-<span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a>  path transcriptome</span>
+<span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a>  <span class="fu">path</span><span class="op">(</span>transcriptome<span class="op">)</span></span>
 <span id="cb35-13"><a href="#cb35-13" tabindex="-1"></a></span>
 <span id="cb35-14"><a href="#cb35-14" tabindex="-1"></a>  output<span class="op">:</span></span>
-<span id="cb35-15"><a href="#cb35-15" tabindex="-1"></a>  path <span class="st">"*"</span></span>
+<span id="cb35-15"><a href="#cb35-15" tabindex="-1"></a>  <span class="fu">path</span><span class="op">(</span><span class="st">"*"</span><span class="op">)</span></span>
 <span id="cb35-16"><a href="#cb35-16" tabindex="-1"></a></span>
 <span id="cb35-17"><a href="#cb35-17" tabindex="-1"></a>  script<span class="op">:</span></span>
 <span id="cb35-18"><a href="#cb35-18" tabindex="-1"></a>  <span class="st">"""</span></span>
@@ -6060,7 +6059,7 @@ multiline string statement. See an example <a href="https://github.com/nextflow-
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <p>Below is an example log.info command printing all the pipeline
 parameters.</p>
@@ -6266,7 +6265,7 @@ in a directory.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <p>The output will look similar to this:</p>
 <div class="codewrapper">
@@ -6449,7 +6448,7 @@ we would run:</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
 <div class="accordion-body">
 <p>Example solution using run name <code>elegant_descartes</code>.</p>
 <div class="codewrapper sourceCode" id="cb13">
@@ -6478,7 +6477,7 @@ for a specific process e.g. multiqc.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb14">
 <h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -6564,7 +6563,7 @@ and the template.html file.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
   <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
 </button>
-<div id="collapseSolution4" class="accordion-collapse collapse" data-bs-parent="#accordionSolution4" aria-labelledby="headingSolution4">
+<div id="collapseSolution4" class="accordion-collapse collapse" aria-labelledby="headingSolution4" data-bs-parent="#accordionSolution4">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb19">
 <h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -6680,7 +6679,7 @@ parameter <code>--input 'data/yeast/reads/temp33*'</code>:</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb3">
 <h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -6786,7 +6785,7 @@ without having to re-execute it from scratch.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
 <div class="accordion-body">
 <p>The output will look similar to this:</p>
 <div class="codewrapper">
@@ -7005,7 +7004,7 @@ associated files.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
 <div class="accordion-body">
 <p>An example nextflow clean command with <code>dry-run</code> .</p>
 <div class="codewrapper sourceCode" id="cb14">
@@ -7046,7 +7045,7 @@ have been successfully executed.</li>
 </div>
 </section></section><section id="aio-10-configuration"><p>Content from <a href="10-configuration.html">Nextflow configuration</a></p>
 <hr>
-<p>Last updated on 2025-01-16 |
+<p>Last updated on 2025-01-28 |
 
         <a href="https://github.com/carpentries-incubator/workflows-nextflow/edit/main/episodes/10-configuration.md" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
 <p>Estimated time: <i aria-hidden="true" data-feather="clock"></i> 45 minutes</p>
@@ -7276,7 +7275,7 @@ script <code>print_message.nf</code>:</p>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>    echo <span class="kw">true</span></span>
 <span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a></span>
 <span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>    val my_message</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>    <span class="fu">val</span><span class="op">(</span>my_message<span class="op">)</span></span>
 <span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a></span>
 <span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>    script<span class="op">:</span></span>
 <span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>    <span class="st">"""</span></span>
@@ -7301,7 +7300,7 @@ script <code>print_message.nf</code>:</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <ol style="list-style-type: decimal">
 <li>‘hello’ - Workflow script uses the value in
@@ -7546,7 +7545,7 @@ for the two processes <code>P1</code> (cpus 1 and memory 2.GB) and
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb14">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -7729,7 +7728,7 @@ where the Conda environments are stored. By default this is in
 <button class="accordion-button instructor-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInstructor1" aria-expanded="false" aria-controls="collapseInstructor1">
   <h3 class="accordion-header" id="headingInstructor1">  <div class="note-square"><i aria-hidden="true" class="callout-icon" data-feather="edit-2"></i></div> Instructor Note </h3>
 </button>
-<div id="collapseInstructor1" class="accordion-collapse collapse" data-bs-parent="#accordionInstructor1" aria-labelledby="headingInstructor1">
+<div id="collapseInstructor1" class="accordion-collapse collapse" aria-labelledby="headingInstructor1" data-bs-parent="#accordionInstructor1">
 <div class="accordion-body">
 <p>This following exercise necessitates the installation of conda, a
 package and environment management software, on your system for
@@ -7802,7 +7801,7 @@ configuration file using the <code>-c</code> option.</li>
 <span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a>process FASTP <span class="op">{</span></span>
 <span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a></span>
 <span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>   input<span class="op">:</span></span>
-<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a>   path read</span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a>   <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
 <span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a></span>
 <span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a>   output<span class="op">:</span></span>
 <span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a>   stdout</span>
@@ -7821,7 +7820,7 @@ configuration file using the <code>-c</code> option.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb23">
 <h3 class="code-label">GROOVY<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -8068,7 +8067,7 @@ read-in.</li>
 </div>
 </section></section><section id="aio-11-Simple_Rna-Seq_pipeline"><p>Content from <a href="11-Simple_Rna-Seq_pipeline.html">Simple RNA-Seq pipeline</a></p>
 <hr>
-<p>Last updated on 2025-01-06 |
+<p>Last updated on 2025-01-28 |
 
         <a href="https://github.com/carpentries-incubator/workflows-nextflow/edit/main/episodes/11-Simple_Rna-Seq_pipeline.md" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
 <p>Estimated time: <i aria-hidden="true" data-feather="clock"></i> 60 minutes</p>
@@ -8382,10 +8381,10 @@ which calls the <code>INDEX</code> process.</li>
 <span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a>process INDEX <span class="op">{</span></span>
 <span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a></span>
 <span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a>    path transcriptome</span>
+<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a>    <span class="fu">path</span><span class="op">(</span>transcriptome<span class="op">)</span></span>
 <span id="cb16-29"><a href="#cb16-29" tabindex="-1"></a></span>
 <span id="cb16-30"><a href="#cb16-30" tabindex="-1"></a>    output<span class="op">:</span></span>
-<span id="cb16-31"><a href="#cb16-31" tabindex="-1"></a>    path <span class="st">'index'</span></span>
+<span id="cb16-31"><a href="#cb16-31" tabindex="-1"></a>    <span class="fu">path</span><span class="op">(</span><span class="st">'index'</span><span class="op">)</span></span>
 <span id="cb16-32"><a href="#cb16-32" tabindex="-1"></a></span>
 <span id="cb16-33"><a href="#cb16-33" tabindex="-1"></a>    script<span class="op">:</span></span>
 <span id="cb16-34"><a href="#cb16-34" tabindex="-1"></a>    <span class="st">"""</span></span>
@@ -9554,7 +9553,7 @@ there are?</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
 <div class="accordion-body">
 <p>Use the <code>--help</code> flag to print the list command usage.</p>
 <div class="codewrapper sourceCode" id="cb9">
@@ -9681,7 +9680,7 @@ latest version of the pipeline</p></li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
 <div class="accordion-body">
 <p>Use the <code>nextflow pull</code> command to download the latest
 <code>nf-core/rnaseq</code> pipeline</p>
@@ -9794,7 +9793,7 @@ now.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb21">
 <h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -9931,7 +9930,7 @@ configuration.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
   <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
 </button>
-<div id="collapseSolution4" class="accordion-collapse collapse" aria-labelledby="headingSolution4" data-bs-parent="#accordionSolution4">
+<div id="collapseSolution4" class="accordion-collapse collapse" data-bs-parent="#accordionSolution4" aria-labelledby="headingSolution4">
 <div class="accordion-body">
 <p>A line similar to one below in the file custom.config</p>
 <pre><code><span><span class="va">params.email</span> <span class="op">=</span> <span class="st">"myemail@address.com"</span></span></code></pre>
@@ -10053,7 +10052,7 @@ FASTQC and multiqc.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution5" aria-expanded="false" aria-controls="collapseSolution5">
   <h4 class="accordion-header" id="headingSolution5"> Show me the solution </h4>
 </button>
-<div id="collapseSolution5" class="accordion-collapse collapse" aria-labelledby="headingSolution5" data-bs-parent="#accordionSolution5">
+<div id="collapseSolution5" class="accordion-collapse collapse" data-bs-parent="#accordionSolution5" aria-labelledby="headingSolution5">
 <div class="accordion-body">
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>

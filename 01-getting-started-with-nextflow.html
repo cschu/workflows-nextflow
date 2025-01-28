@@ -387,7 +387,7 @@
       </div>
       <hr></nav><main id="main-content" class="main-content"><div class="container lesson-content">
         <h1>Getting Started with Nextflow</h1>
-        <p>Last updated on 2025-01-06 |
+        <p>Last updated on 2025-01-28 |
 
         <a href="https://github.com/carpentries-incubator/workflows-nextflow/edit/main/episodes/01-getting-started-with-nextflow.md" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
 
@@ -576,38 +576,37 @@ the following code:</p>
 <span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a>workflow <span class="op">{</span></span>
 <span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a>    <span class="co">//  The script to execute is called by it's process name, and input is provided between brackets.</span></span>
 <span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>    <span class="fu">NUM_LINES</span><span class="op">(</span>input_ch<span class="op">)</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>    <span class="fu">count_lines</span><span class="op">(</span>input_ch<span class="op">)</span></span>
 <span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a></span>
 <span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>    <span class="st">/*  Process output is accessed using the `out` channel.</span></span>
 <span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="st">        The channel operator view() is used to print process output to the terminal. */</span></span>
 <span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>    NUM_LINES<span class="op">.</span>out<span class="op">.</span><span class="fu">view</span><span class="op">()</span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>    count_lines<span class="op">.</span>out<span class="op">.</span><span class="fu">view</span><span class="op">()</span></span>
 <span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a></span>
 <span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a></span>
 <span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="st">/*</span></span>
 <span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="st">========================================================================================</span></span>
-<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="st">    A Nextflow process block. Process names are written, by convention, in uppercase.</span></span>
-<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="st">    This convention is used to enhance workflow readability.</span></span>
-<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="st">========================================================================================</span></span>
-<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="st">*/</span></span>
-<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a>process NUM_LINES <span class="op">{</span></span>
-<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a>    input<span class="op">:</span></span>
-<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a>    path read</span>
-<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a></span>
-<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a>    output<span class="op">:</span></span>
-<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a>    stdout</span>
-<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>    script<span class="op">:</span></span>
-<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="st">    # Print file name</span></span>
-<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a><span class="st">    printf '</span><span class="ss">${</span>read<span class="ss">}</span><span class="sc">\\</span><span class="st">t'</span></span>
-<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="st">    # Unzip file and count number of lines</span></span>
-<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a><span class="st">    gunzip -c </span><span class="ss">${</span>read<span class="ss">}</span><span class="st"> | wc -l</span></span>
-<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a><span class="op">}</span></span></code></pre>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="st">    A Nextflow process block.</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="st">========================================================================================</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="st">*/</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a>process count_lines <span class="op">{</span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a>    <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a>    stdout</span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a>    script<span class="op">:</span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="st">    # Print file name</span></span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="st">    echo </span><span class="ss">${</span>reads<span class="ss">}</span></span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a><span class="st">    # Unzip file and count number of lines</span></span>
+<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="st">    gunzip -c </span><span class="ss">${</span>reads<span class="ss">}</span><span class="st"> | wc -l</span></span>
+<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a><span class="op">}</span></span></code></pre>
 </div>
 <p>This is a Nextflow script, which contains the following:</p>
 <ol style="list-style-type: decimal"><li>An optional interpreter directive (“Shebang”) line, specifying the
@@ -627,13 +626,13 @@ default workflow to run.</li>
 <li>A Nextflow process block named <code>NUM_LINES</code>, which defines
 what the process does.</li>
 <li>An <code>input</code> definition block that assigns the
-<code>input</code> to the variable <code>read</code>, and declares that
+<code>input</code> to the variable <code>reads</code>, and declares that
 it should be interpreted as a file path.</li>
 <li>An <code>output</code> definition block that uses the Linux/Unix
 standard output stream <code>stdout</code> from the script block.</li>
 <li>A script block that contains the bash commands
-<code>printf '${read}'</code> and
-<code>gunzip -c ${read} | wc -l</code>.</li>
+<code>printf '${reads}'</code> and
+<code>gunzip -c ${reads} | wc -l</code>.</li>
 </ol></section><section><h2 class="section-heading" id="running-nextflow-scripts">Running Nextflow scripts<a class="anchor" aria-label="anchor" href="#running-nextflow-scripts"></a></h2>
 <hr class="half-width"><p>To run a Nextflow script use the command
 <code>nextflow run &lt;script_name&gt;</code>.</p>
@@ -659,7 +658,7 @@ terminal:</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <p>You should see output similar to the text shown below:</p>
 <div class="codewrapper">
@@ -775,7 +774,7 @@ command.</li>
   "url": "https://carpentries-incubator.github.io/workflows-nextflow/01-getting-started-with-nextflow.html",
   "identifier": "https://carpentries-incubator.github.io/workflows-nextflow/01-getting-started-with-nextflow.html",
   "dateCreated": "2021-02-01",
-  "dateModified": "2025-01-06",
+  "dateModified": "2025-01-28",
   "datePublished": "2025-01-28"
 }
 

@@ -38,14 +38,14 @@ workflow {
 process NUM_LINES {
 
     input:
-    path read
+    path(reads)
 
     output:
     stdout
 
     script:
     """
-    printf '${read} '
-    gunzip -c ${read} | wc -l
+    printf '${reads} '
+    gunzip -c ${reads} | wc -l
     """
 }
