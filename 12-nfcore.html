@@ -646,6 +646,7 @@ or number of GitHub stars (<code>--sort stars</code>).</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="bell"></i>
 </div>
+<span class="callout-header">Callout</span>
 <div id="archived-pipelines" class="callout-inner">
 <h3 class="callout-title">Archived pipelines</h3>
 <div class="callout-content">
@@ -658,6 +659,7 @@ the <code>--show_archived</code> flag.</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="exercise-listing-nf-core-pipelines" class="callout-inner">
 <h3 class="callout-title">Exercise: listing nf-core pipelines</h3>
 <div class="callout-content">
@@ -675,7 +677,7 @@ there are?</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
 <div class="accordion-body">
 <p>Use the <code>--help</code> flag to print the list command usage.</p>
 <div class="codewrapper sourceCode" id="cb9">
@@ -767,6 +769,7 @@ pipeline version number that you wish to use with the
 <div class="callout-square">
 <i class="callout-icon" data-feather="bell"></i>
 </div>
+<span class="callout-header">Callout</span>
 <div id="development-releases" class="callout-inner">
 <h3 class="callout-title">Development Releases</h3>
 <div class="callout-content">
@@ -782,8 +785,10 @@ default branch is <code>dev</code>.</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="exercise-fetch-the-latest-rna-seq-pipeline" class="callout-inner">
-<h3 class="callout-title">Exercise: Fetch the latest RNA-Seq pipeline</h3>
+<h3 class="callout-title">Exercise: Fetch the latest RNA-Seq
+pipeline</h3>
 <div class="callout-content">
 <ol style="list-style-type: decimal"><li><p>Use the <code>nextflow pull</code> command to download the latest
 <code>nf-core/rnaseq</code> pipeline</p></li>
@@ -797,7 +802,7 @@ latest version of the pipeline</p></li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
 <div class="accordion-body">
 <p>Use the <code>nextflow pull</code> command to download the latest
 <code>nf-core/rnaseq</code> pipeline</p>
@@ -886,6 +891,7 @@ can be launched there and then.</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="exercise-create-nf-core-params-file" class="callout-inner">
 <h3 class="callout-title">Exercise : Create nf-core params file</h3>
 <div class="callout-content">
@@ -905,7 +911,7 @@ now.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb21">
 <h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -997,6 +1003,7 @@ specified matters. Their priority increases from left to right.</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="bell"></i>
 </div>
+<span class="callout-header">Callout</span>
 <div id="multiple-nextflow-configuration-locations" class="callout-inner">
 <h3 class="callout-title">Multiple Nextflow configuration locations</h3>
 <div class="callout-content">
@@ -1013,6 +1020,7 @@ configuration.</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="exercise-create-a-custom-config" class="callout-inner">
 <h3 class="callout-title">Exercise create a custom config</h3>
 <div class="callout-content">
@@ -1026,7 +1034,7 @@ configuration.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
   <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
 </button>
-<div id="collapseSolution4" class="accordion-collapse collapse" aria-labelledby="headingSolution4" data-bs-parent="#accordionSolution4">
+<div id="collapseSolution4" class="accordion-collapse collapse" data-bs-parent="#accordionSolution4" aria-labelledby="headingSolution4">
 <div class="accordion-body">
 <p>A line similar to one below in the file custom.config</p>
 <pre><code><span><span class="va">params.email</span> <span class="op">=</span> <span class="st">"myemail@address.com"</span></span></code></pre>
@@ -1052,6 +1060,7 @@ with a full size data set:</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="bell"></i>
 </div>
+<span class="callout-header">Callout</span>
 <div id="software-configuration-profile" class="callout-inner">
 <h3 class="callout-title">Software configuration profile</h3>
 <div class="callout-content">
@@ -1119,6 +1128,7 @@ INFO     Downloading workflow files from GitHub</code></pre>
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="exercise-run-a-demo-nf-core-pipeline" class="callout-inner">
 <h3 class="callout-title">Exercise Run a demo nf-core pipeline</h3>
 <div class="callout-content">
@@ -1145,7 +1155,7 @@ FASTQC and multiqc.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution5" aria-expanded="false" aria-controls="collapseSolution5">
   <h4 class="accordion-header" id="headingSolution5"> Show me the solution </h4>
 </button>
-<div id="collapseSolution5" class="accordion-collapse collapse" aria-labelledby="headingSolution5" data-bs-parent="#accordionSolution5">
+<div id="collapseSolution5" class="accordion-collapse collapse" data-bs-parent="#accordionSolution5" aria-labelledby="headingSolution5">
 <div class="accordion-body">
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -1265,8 +1275,8 @@ generated by Zenodo from the pipeline’s github repository.</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="key"></i>
 </div>
+<span class="callout-header">Key Points</span>
 <div class="callout-inner">
-<h3 class="callout-title">Key Points</h3>
 <div class="callout-content">
 <ul><li>nf-core is a community-led project to develop a set of best-practice
 pipelines built using the Nextflow workflow management system.</li>
@@ -1323,7 +1333,7 @@ and/or adding command line parameters.</li>
         <p>Materials licensed under <a href="LICENSE.html">CC-BY 4.0</a> by the authors</p>
 
         <p>Template licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="external-link">CC-BY 4.0</a> by <a href="https://carpentries.org/" class="external-link">The Carpentries</a></p>
-        <p>Built with <a href="https://github.com/carpentries/sandpaper/tree/0.16.12" class="external-link">sandpaper (0.16.12)</a>, <a href="https://github.com/carpentries/pegboard/tree/0.7.9" class="external-link">pegboard (0.7.9)</a>, and <a href="https://github.com/carpentries/varnish/tree/1.0.6" class="external-link">varnish (1.0.6)</a></p>
+        <p>Built with <a href="https://github.com/carpentries/sandpaper/tree/0.17.1" class="external-link">sandpaper (0.17.1)</a>, <a href="https://github.com/carpentries/pegboard/tree/0.7.9" class="external-link">pegboard (0.7.9)</a>, and <a href="https://github.com/carpentries/varnish/tree/1.0.7" class="external-link">varnish (1.0.7)</a></p>
 			</div>
 		</footer></div> <!-- / div.container -->
 	<div id="to-top">
@@ -1346,7 +1356,7 @@ and/or adding command line parameters.</li>
   "identifier": "https://carpentries-incubator.github.io/workflows-nextflow/12-nfcore.html",
   "dateCreated": "2021-02-01",
   "dateModified": "2025-01-06",
-  "datePublished": "2025-08-05"
+  "datePublished": "2025-08-12"
 }
 
   </script><script>
